@@ -1,0 +1,55 @@
+/* Report admin popup - 2026-09-04 */
+.rp-manager{font-family:"Kanit",sans-serif;text-align:left}.rp-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 14px}.rp-total{margin-right:auto;color:#334155}.rp-search{min-width:220px;flex:1;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}.rp-btn{border:0;border-radius:10px;padding:9px 13px;font:inherit;font-weight:600;cursor:pointer;transition:.15s}.rp-btn:disabled{opacity:.55;cursor:not-allowed}.rp-add,.rp-save{background:#2563eb;color:#fff}.rp-edit{background:#f59e0b;color:#fff}.rp-delete,.rp-confirm-delete{background:#dc2626;color:#fff}.rp-cancel{background:#e2e8f0;color:#334155}.rp-table-wrap{max-height:58vh;overflow:auto;border:1px solid #e2e8f0;border-radius:14px}.rp-table{width:100%;min-width:900px;border-collapse:collapse}.rp-table th,.rp-table td{padding:11px 12px;border-bottom:1px solid #e2e8f0;vertical-align:middle}.rp-table th{position:sticky;top:0;z-index:2;background:#eff6ff;color:#1e3a8a}.rp-actions{display:flex;gap:6px;white-space:nowrap}.rp-download{display:inline-block;padding:7px 10px;border-radius:8px;background:#2563eb;color:#fff;text-decoration:none;font-weight:600}.rp-pages{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:12px}.rp-pages button{min-width:34px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;padding:6px 8px;cursor:pointer}.rp-pages button.active{background:#2563eb;color:#fff;border-color:#2563eb}
+.rp-overlay{position:absolute;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(15,23,42,.52);border-radius:inherit}.rp-dialog{width:min(640px,96%);max-height:88%;overflow:auto;padding:22px;border-radius:18px;background:#fff;box-shadow:0 24px 70px rgba(15,23,42,.25)}.rp-dialog h3{margin:0 0 16px;text-align:center}.rp-form{display:grid;gap:13px}.rp-form label{display:grid;gap:6px;font-weight:600;color:#334155}.rp-form input,.rp-form select{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}.rp-upload-box{padding:12px;border:1px dashed #94a3b8;border-radius:12px;background:#f8fafc}.rp-file-name{display:block;margin-top:6px;color:#64748b;font-size:13px}.rp-hint{color:#64748b;font-size:12px;font-weight:400}.rp-error{min-height:20px;color:#dc2626;font-size:14px}.rp-form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:4px}@media(max-width:700px){.rp-toolbar{align-items:stretch;flex-direction:column}.rp-total{margin-right:0}.rp-search{width:100%;min-width:0}.rp-dialog{padding:16px}.rp-form-actions{flex-direction:column-reverse}.rp-form-actions .rp-btn{width:100%}}
+
+/* 2026-09-04: taller Add/Edit Report popup. Delete confirmation stays compact. */
+.swal2-popup.rp-editor-open{
+  height:min(760px,90vh) !important;
+  min-height:min(680px,86vh) !important;
+  max-height:92vh !important;
+  overflow:hidden !important;
+}
+.swal2-popup.rp-editor-open > .swal2-title,
+.swal2-popup.rp-editor-open > .swal2-html-container{
+  visibility:hidden;
+}
+.rp-overlay.rp-action.rp-action-editor{
+  position:absolute;
+  inset:0;
+  z-index:2147483000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+  border-radius:inherit;
+  background:rgba(15,23,42,.52);
+  visibility:visible;
+}
+.rp-overlay.rp-action.rp-action-editor .rp-dialog{
+  box-sizing:border-box;
+  width:min(700px,96%);
+  height:calc(100% - 20px);
+  min-height:0;
+  max-height:none;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  padding:24px;
+}
+.rp-overlay.rp-action.rp-action-editor .rp-form{
+  flex:1;
+  align-content:start;
+}
+@media(max-width:700px){
+  .swal2-popup.rp-editor-open{
+    height:94vh !important;
+    min-height:88vh !important;
+    max-height:96vh !important;
+  }
+  .rp-overlay.rp-action.rp-action-editor{padding:8px}
+  .rp-overlay.rp-action.rp-action-editor .rp-dialog{
+    width:100%;
+    height:100%;
+    padding:16px;
+  }
+}

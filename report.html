@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="รายงานผลการปฏิบัติการ">
+  <title>รายงานผลการปฏิบัติการ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="app-config.js?v=20260901-central-api-1"></script>
+  <link rel="stylesheet" href="report.css?v=20260904-report-1">
+  <link rel="stylesheet" href="admin-subpage.css?v=20260826-1">
+  <link rel="stylesheet" href="report-manager.css?v=20260904-report-tall-2">
+</head>
+<body>
+  <main class="report-page">
+    <div class="report-container">
+      <div class="report-topbar admin-subpage-topbar">
+        <button class="admin-manage-data-button" type="button" data-admin-page="report" hidden>จัดการข้อมูล</button>
+        <a class="report-back" href="index.html" onclick="return backToHome(event)" aria-label="กลับหน้าหลัก">← กลับหน้าหลัก</a>
+      </div>
+
+      <header class="report-heading">
+        <p>Performance Report</p>
+        <h1>รายงานผลการปฏิบัติการ</h1>
+        <span aria-hidden="true"></span>
+      </header>
+
+      <section class="report-panel">
+        <div class="report-tools">
+          <label for="reportSearch">รายการรายงาน</label>
+          <input id="reportSearch" class="report-search" type="search" placeholder="ค้นหาเรื่อง ผู้รายงาน หรือประเภทงาน..." autocomplete="off">
+        </div>
+        <div id="reportStatus" class="report-status" role="status">
+          <span class="report-spinner" aria-hidden="true"></span><span>กำลังโหลดรายงาน...</span>
+        </div>
+        <div class="report-table-wrap">
+          <table class="report-table" aria-label="ตารางรายงานผลการปฏิบัติการ">
+            <thead><tr><th>ลำดับ</th><th>เรื่อง</th><th>ผู้รายงาน</th><th>ประเภทงาน</th><th>ดาวน์โหลดไฟล์</th></tr></thead>
+            <tbody id="reportTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="report.js?v=20260904-report-1"></script>
+  <script src="admin-subpage.js?v=20260826-1"></script>
+  <script src="report-manager.js?v=20260904-report-tall-2"></script>
+  <script>
+    function backToHome(event){
+      if(event) event.preventDefault();
+      if(window.opener && !window.opener.closed){ window.close(); return false; }
+      if(window.history.length > 1){ window.history.back(); return false; }
+      window.location.href='index.html'; return false;
+    }
+  </script>
+</body>
+</html>

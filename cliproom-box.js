@@ -2,7 +2,7 @@
   'use strict';
 
   const CLIPROOM_WEB_APP_URL =
-    'https://script.google.com/macros/s/AKfycbz6rNShJFZOlNmVb1ev7lzikFvxyhh2PohGsIjDnqDGRUyPunuw4TlsfWihigms-_YwLA/exec';
+    'https://script.google.com/macros/s/AKfycbwM6029k4wAfLgiRTCCpgfpUq_2aTUh_mb7Dn_5i4vRHIGbnvd_oXmdDQuA33O6WszD/exec';
   const CACHE_KEY = 'SITE_FAST:cliproom-catalog-v1';
   const CACHE_AGE = 5 * 60 * 1000;
   const track = document.getElementById('cliproomTrack');

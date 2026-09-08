@@ -1592,9 +1592,9 @@ window.STUDENT_PROFILE_WEB_APP_URL =
   }
 
   function lookupStudentByJsonp(rollno) {
-    const webAppUrl = String(window.STUDENT_PROFILE_WEB_APP_URL || '').trim();
+    const webAppUrl = String(window.APP_CONFIG?.API_URL || '').trim();
     if (!webAppUrl) {
-      return Promise.reject(new Error('ยังไม่ได้กำหนด URL ของระบบโปรไฟล์นักศึกษา'));
+      return Promise.reject(new Error('ยังไม่ได้กำหนด URL ของ Apps Script หลักของเว็บไซต์'));
     }
 
     return new Promise((resolve, reject) => {
@@ -1620,7 +1620,7 @@ window.STUDENT_PROFILE_WEB_APP_URL =
       };
 
       const url = new URL(webAppUrl);
-      url.searchParams.set('mode', 'studentLookup');
+      url.searchParams.set('mode', 'studentlookup');
       url.searchParams.set('rollno', rollno);
       url.searchParams.set('callback', callbackName);
       url.searchParams.set('_', Date.now().toString());

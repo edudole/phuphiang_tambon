@@ -921,7 +921,7 @@ async function openNewsPopup(item) {
     element.setAttribute('tabindex', '0');
     element.setAttribute('aria-label', 'เปิดเว็บไซต์ สกร.ระดับอำเภอเชียงกลาง');
     const openInSameTab = function () {
-      window.location.href = 'https://chiangklangdole.ac.th';
+      window.location.href = 'https://phuphiang-dole.ac.th';
     };
     element.addEventListener('click', openInSameTab);
     element.addEventListener('keydown', function (event) {

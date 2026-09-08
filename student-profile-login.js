@@ -146,7 +146,38 @@
     url.searchParams.set('_github', Date.now().toString());
     frame.src = url.toString();
 
+    // ปุ่ม Home ของฝั่ง GitHub แสดงทับด้านบนของหน้าผลลัพธ์
+    // กดแล้วกลับ index.html ในแท็บเดิม โดยไม่ย้อนเข้า login_box ของ Web App
+    const homeButton = document.createElement('button');
+    homeButton.id = 'studentServicesHomeButton';
+    homeButton.type = 'button';
+    homeButton.textContent = 'Home';
+    homeButton.setAttribute('aria-label', 'กลับหน้าหลัก');
+    homeButton.style.cssText = [
+      'position:absolute',
+      'top:max(10px, env(safe-area-inset-top))',
+      'left:50%',
+      'transform:translateX(-50%)',
+      'z-index:10',
+      'min-width:104px',
+      'height:42px',
+      'padding:0 22px',
+      'border:1px solid rgba(0,0,0,.10)',
+      'border-radius:999px',
+      'background:rgba(255,255,255,.96)',
+      'color:#24324a',
+      'font:700 15px/1 system-ui,-apple-system,"Segoe UI",sans-serif',
+      'box-shadow:0 5px 18px rgba(0,0,0,.16)',
+      'cursor:pointer',
+      '-webkit-tap-highlight-color:transparent'
+    ].join(';');
+    homeButton.addEventListener('click', () => {
+      removeStudentResultFrame();
+      window.location.assign('index.html');
+    });
+
     overlay.appendChild(frame);
+    overlay.appendChild(homeButton);
     document.body.appendChild(overlay);
 
     return new Promise((resolve, reject) => {

@@ -1592,9 +1592,11 @@ window.STUDENT_PROFILE_WEB_APP_URL =
   }
 
   function lookupStudentByJsonp(rollno) {
-    const webAppUrl = String(window.APP_CONFIG?.API_URL || '').trim();
+    // ใช้ Web App ของระบบ Student Profile โดยตรง
+    // ไม่ใช้ APP_CONFIG.API_URL ของเว็บไซต์หลัก เพื่อหลีกเลี่ยง CORS/การตอบ HTML จากระบบหลัก
+    const webAppUrl = String(window.STUDENT_PROFILE_WEB_APP_URL || '').trim();
     if (!webAppUrl) {
-      return Promise.reject(new Error('ยังไม่ได้กำหนด URL ของ Apps Script หลักของเว็บไซต์'));
+      return Promise.reject(new Error('ยังไม่ได้กำหนด URL ของ Student Profile Web App'));
     }
 
     return new Promise((resolve, reject) => {

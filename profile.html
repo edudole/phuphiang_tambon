@@ -1,83 +1,123 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <script src="app-config.js?v=20260901-central-api-1"></script>
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
-  <title>โปรไฟล์นักศึกษา</title>
+  <meta name="theme-color" content="#f5f7fb">
+  <title>ข้อมูลนักศึกษา</title>
+  <script src="profile-config.js?v=20260909-direct-result-1"></script>
   <style>
-    * { box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #fff; }
-    .profile-frame { display: block; width: 100%; height: 100%; border: 0; }
-    .profile-home-btn {
-      position: fixed; top: 0; left: 50%; right: auto; transform: translateX(-50%); z-index: 9999;
-      display: grid; place-items: center; width: 65px; height: 54px;
-      border: 0; border-right: 1px solid rgba(255,255,255,.25);
-      background: #ffffff; color: #111827; text-decoration: none;
-      box-shadow: 0 1px 4px rgba(0,0,0,.18);
-    }
-    .profile-home-btn:hover { background: #f3f4f6; }
-    .profile-home-btn:focus-visible { outline: 3px solid #38bdf8; outline-offset: -3px; }
-    .profile-home-btn svg { width: 29px; height: 29px; fill: currentColor; }
-    @media (max-width: 700px) {
-      .profile-home-btn { left: 50%; right: auto; width: 48px; height: 48px; }
-      .profile-home-btn svg { width: 26px; height: 26px; }
-    }
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Noto Sans Thai","Sarabun",system-ui,-apple-system,sans-serif;background:#f5f7fb;color:#17213a}
+    body{padding:24px 14px 56px}.wrap{width:min(1040px,100%);margin:0 auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+    .home-btn,.retry-btn{border:0;border-radius:14px;background:#fff;color:#17213a;text-decoration:none;padding:11px 16px;font-weight:800;box-shadow:0 5px 20px rgba(20,35,70,.08);cursor:pointer}
+    .title{font-size:clamp(24px,5vw,36px);font-weight:900;margin:0}.sub{color:#71809f;font-size:14px;margin-top:4px}
+    .loading,.error-box{background:#fff;border-radius:24px;padding:36px 22px;text-align:center;box-shadow:0 10px 35px rgba(20,35,70,.08)}
+    .spinner{width:46px;height:46px;border:5px solid #e7ebf4;border-top-color:#4f46e5;border-radius:50%;margin:0 auto 16px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .profile{display:none}.hero{display:grid;grid-template-columns:150px 1fr;gap:24px;align-items:center;background:#fff;border-radius:28px;padding:24px;box-shadow:0 10px 35px rgba(20,35,70,.08)}
+    .avatar{width:150px;height:150px;border-radius:26px;object-fit:cover;background:#eef2f8;border:5px solid #fff;box-shadow:0 8px 24px rgba(20,35,70,.12)}
+    .name{font-size:clamp(25px,5vw,38px);font-weight:900;margin:0 0 8px}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{padding:7px 11px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:13px;font-weight:800}
+    .details{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.detail{background:#f8faff;border:1px solid #edf0f6;border-radius:16px;padding:13px}.label{font-size:12px;color:#8390aa}.value{margin-top:3px;font-weight:800;word-break:break-word}
+    .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}.metric{background:#fff;border-radius:22px;padding:18px;box-shadow:0 7px 24px rgba(20,35,70,.06)}.metric strong{display:block;font-size:30px;margin:8px 0 4px}.metric span{color:#71809f;font-size:13px}.bar{height:8px;background:#edf0f6;border-radius:999px;overflow:hidden;margin-top:12px}.bar>i{display:block;height:100%;background:linear-gradient(90deg,#4f46e5,#0ea5e9);border-radius:999px;width:0}
+    .section{background:#fff;border-radius:24px;padding:20px;margin-top:18px;box-shadow:0 7px 24px rgba(20,35,70,.06)}.section h2{font-size:19px;margin:0 0 14px}.messages{display:grid;gap:10px}.message{padding:13px 15px;border-radius:14px;background:#fff8e8;border:1px solid #fde8b1}.empty{color:#8793aa}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.action{display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border-radius:13px;background:#243b80;color:#fff;text-decoration:none;font-weight:800}.action.secondary{background:#fff;color:#243b80;border:1px solid #dfe5f3}
+    @media(max-width:760px){body{padding-top:14px}.hero{grid-template-columns:1fr;text-align:center}.avatar{margin:auto}.chips{justify-content:center}.details{grid-template-columns:1fr 1fr}.metrics{grid-template-columns:1fr 1fr}.topbar .titlebox{text-align:right}}
+    @media(max-width:430px){.details,.metrics{grid-template-columns:1fr}.hero{padding:18px}.avatar{width:125px;height:125px}}
   </style>
-  <link rel="stylesheet" href="theme-modern.css?v=20260902-1">
 </head>
-<body class="theme-v2">
-  <a class="profile-home-btn"
-     href="https://brainboosthub.github.io/amphoe_ok4/index.html"
-     onclick="return backToHome(event)"
-     aria-label="กลับหน้าหลัก"
-     title="Home">
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M12 2.6 2 11h2.2v10.4h6.1v-6.2h3.4v6.2h6.1V11H22L12 2.6Z"/>
-    </svg>
-  </a>
-  <iframe id="profileFrame" class="profile-frame" title="ระบบโปรไฟล์นักศึกษา"
-          allow="clipboard-read; clipboard-write; camera; microphone"
-          allowfullscreen></iframe>
+<body>
+  <main class="wrap">
+    <div class="topbar">
+      <a class="home-btn" href="index.html#studentServicesBox">← หน้าหลัก</a>
+      <div class="titlebox"><h1 class="title">ข้อมูลนักศึกษา</h1><div class="sub">ระบบช่วยเหลือผู้เรียน</div></div>
+    </div>
 
-  <script src="profile-config.js?v=20260821-1"></script>
-  <script>
-    function backToHome(event) {
-      if (event) event.preventDefault();
+    <section id="loadingBox" class="loading" aria-live="polite"><div class="spinner"></div><strong>กำลังโหลดข้อมูลนักศึกษา...</strong><div class="sub" id="loadingId"></div></section>
+    <section id="errorBox" class="error-box" hidden><h2>โหลดข้อมูลไม่สำเร็จ</h2><p id="errorText"></p><button class="retry-btn" id="retryBtn" type="button">ลองใหม่</button></section>
 
-      sessionStorage.removeItem('SSS_PROFILE_ROLLNO');
+    <div id="profileBox" class="profile">
+      <section class="hero">
+        <img id="avatar" class="avatar" alt="รูปนักศึกษา">
+        <div>
+          <h2 id="name" class="name"></h2>
+          <div class="chips"><span class="chip" id="rollno"></span><span class="chip" id="grade"></span><span class="chip" id="term"></span></div>
+          <div class="details">
+            <div class="detail"><div class="label">ระดับการศึกษา</div><div class="value" id="grade2">-</div></div>
+            <div class="detail"><div class="label">วันเรียน</div><div class="value" id="classDay">-</div></div>
+            <div class="detail"><div class="label">ศกร./สถานศึกษา</div><div class="value" id="office">-</div></div>
+          </div>
+        </div>
+      </section>
 
-      if (window.opener && !window.opener.closed) {
-        window.close();
-        return false;
-      }
+      <section class="metrics">
+        <div class="metric"><span>การมาเรียน</span><strong id="meet">0%</strong><div class="bar"><i id="meetBar"></i></div></div>
+        <div class="metric"><span>การส่งใบงาน</span><strong id="classroom">0%</strong><div class="bar"><i id="classroomBar"></i></div></div>
+        <div class="metric"><span>Point กิจกรรม</span><strong id="activity">0</strong><div class="bar"><i id="activityBar"></i></div></div>
+        <div class="metric"><span>คะแนนเก็บ</span><strong id="score">0%</strong><div class="bar"><i id="scoreBar"></i></div></div>
+      </section>
 
-      window.location.replace('https://brainboosthub.github.io/amphoe_ok4/index.html');
-      return false;
-    }
+      <section class="section" id="messageSection"><h2>ข้อความสำหรับนักศึกษา</h2><div id="messages" class="messages"></div></section>
 
-    (() => {
-      const params = new URLSearchParams(window.location.search);
-      const rollno = String(params.get('rollno') || sessionStorage.getItem('SSS_PROFILE_ROLLNO') || '')
-        .replace(/\D/g, '').slice(0, 10);
-      const webAppUrl = String(window.STUDENT_PROFILE_WEB_APP_URL || '').trim();
-      const frame = document.getElementById('profileFrame');
-      if (!rollno || !webAppUrl) {
-        window.location.replace('index.html#studentServicesBox');
-        return;
-      }
+      <div class="actions">
+        <a id="termLink" class="action" target="_blank" rel="noopener">ข้อมูลภาคเรียน</a>
+        <a class="action secondary" href="index.html#studentServicesBox">ค้นหารหัสอื่น</a>
+      </div>
+    </div>
+  </main>
 
-      // URL ของหน้านี้เป็นแหล่งข้อมูลหลักเสมอ ป้องกัน session เก่าพานักศึกษาผิดคน
-      try { sessionStorage.setItem('SSS_PROFILE_ROLLNO', rollno); } catch (_) {}
+<script>
+(() => {
+  'use strict';
+  const params = new URLSearchParams(location.search);
+  const rollno = String(params.get('rollno') || sessionStorage.getItem('SSS_PROFILE_ROLLNO') || '').replace(/\D/g,'').slice(0,10);
+  const webAppUrl = String(window.STUDENT_PROFILE_WEB_APP_URL || '').trim();
+  const $ = id => document.getElementById(id);
+  $('loadingId').textContent = rollno ? `รหัสนักศึกษา ${rollno}` : '';
 
-      const target = new URL(webAppUrl);
-      target.searchParams.set('rollno', rollno);
-      target.searchParams.set('githubAutoLogin', '1');
-      // บังคับ iframe โหลด session ใหม่ ไม่ใช้หน้า Web App ที่ browser อาจ cache ไว้
-      target.searchParams.set('_profileSession', `${rollno}-${Date.now()}`);
-      frame.src = target.toString();
-    })();
-  </script>
+  function val(v, fallback='-'){ const s=String(v ?? '').trim(); return s || fallback; }
+  function num(v){ const n=Number(v); return Number.isFinite(n) ? n : 0; }
+  function pct(v){ return Math.max(0, Math.min(100, Math.round(num(v)))); }
+  function setBar(id,v){ $(id).style.width = pct(v) + '%'; }
+  function showError(message){ $('loadingBox').hidden=true; $('profileBox').style.display='none'; $('errorBox').hidden=false; $('errorText').textContent=message || 'ไม่สามารถโหลดข้อมูลนักศึกษาได้'; }
+
+  function jsonp(mode, rollno){
+    return new Promise((resolve,reject)=>{
+      if(!webAppUrl) return reject(new Error('ยังไม่ได้กำหนด URL Student Profile Web App'));
+      const cb='__sssProfile_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+      const script=document.createElement('script'); let timer;
+      const cleanup=()=>{ clearTimeout(timer); try{delete window[cb]}catch(_){window[cb]=undefined} script.remove(); };
+      window[cb]=data=>{cleanup();resolve(data||{})};
+      script.onerror=()=>{cleanup();reject(new Error('เชื่อมต่อระบบข้อมูลนักศึกษาไม่สำเร็จ'))};
+      const u=new URL(webAppUrl); u.searchParams.set('mode',mode); u.searchParams.set('rollno',rollno); u.searchParams.set('callback',cb); u.searchParams.set('_',Date.now());
+      script.src=u.toString(); script.async=true; timer=setTimeout(()=>{cleanup();reject(new Error('ระบบใช้เวลานานเกินไป กรุณาลองใหม่'))},45000); document.head.appendChild(script);
+    });
+  }
+
+  function render(r){
+    $('avatar').src=val(r.imguser,'https://static.wixstatic.com/media/a503e5_52c72c449cd841c88ab4620081a8a326~mv2.png');
+    $('name').textContent=val(r.Name,'นักศึกษา'); $('rollno').textContent='รหัส '+val(r.rollno,rollno); $('grade').textContent=val(r.Class_Grage,'ไม่ระบุระดับ');
+    $('term').textContent='ภาคเรียน '+val(r.Term1,'-'); $('grade2').textContent=val(r.Class_Grage); $('classDay').textContent=val(r.Class_day); $('office').textContent=val(r.Office);
+    const meet=pct(r.Bar_cicle1), classroom=pct(r.Bar_cicle2), activityPct=pct(r.Bar_cicle33), score=pct(r.ScorePointPercent);
+    $('meet').textContent=meet+'%'; $('classroom').textContent=classroom+'%'; $('activity').textContent=val(r.Bar_cicle3,'0'); $('score').textContent=score+'%';
+    setBar('meetBar',meet); setBar('classroomBar',classroom); setBar('activityBar',activityPct); setBar('scoreBar',score);
+    const msgs=[r.Mess1,r.Mess2,r.Mess3].map(x=>String(x||'').trim()).filter(Boolean); const box=$('messages'); box.innerHTML='';
+    if(msgs.length){ msgs.forEach(m=>{const d=document.createElement('div');d.className='message';d.textContent=m;box.appendChild(d);}); } else { const d=document.createElement('div');d.className='empty';d.textContent='ไม่มีข้อความใหม่';box.appendChild(d); }
+    try{sessionStorage.setItem('SSS_PROFILE_ROLLNO',String(r.rollno||rollno));}catch(_){ }
+    const term=new URL(webAppUrl); term.searchParams.set('page','Term1'); term.searchParams.set('rollno',String(r.rollno||rollno)); term.searchParams.set('imguser',String(r.imguser||'')); $('termLink').href=term.toString();
+    $('loadingBox').hidden=true; $('errorBox').hidden=true; $('profileBox').style.display='block';
+  }
+
+  async function load(){
+    if(!rollno){ showError('ไม่พบรหัสนักศึกษา กรุณากลับไปกรอกรหัสใหม่'); return; }
+    $('loadingBox').hidden=false; $('errorBox').hidden=true;
+    try{
+      const res=await jsonp('studentprofile',rollno);
+      if(res.success===false) throw new Error(res.message||'โหลดข้อมูลไม่สำเร็จ');
+      if(!res.found || !res.student) throw new Error(`ไม่พบข้อมูลรหัสนักศึกษา ${rollno}`);
+      render(res.student);
+    }catch(err){ console.error('profile direct result error:',err); showError(err?.message||'โหลดข้อมูลนักศึกษาไม่สำเร็จ'); }
+  }
+  $('retryBtn').addEventListener('click',load); load();
+})();
+</script>
 </body>
 </html>

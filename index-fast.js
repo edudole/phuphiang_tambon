@@ -1680,19 +1680,7 @@ window.STUDENT_PROFILE_WEB_APP_URL =
       try {
         sessionStorage.setItem('SSS_PROFILE_ROLLNO', rollno);
       } catch (_) {}
-
-      if (window.Swal) {
-        const studentName = String(result.student?.Name || result.student?.name || '').trim();
-        await Swal.fire({
-          icon: 'success',
-          title: 'พบข้อมูลนักศึกษา',
-          text: studentName || `รหัสนักศึกษา ${rollno}`,
-          showConfirmButton: false,
-          timer: 650,
-          timerProgressBar: true
-        });
-      }
-
+      // พบข้อมูลแล้ว เปิดหน้าผลทันที ไม่แสดง pop-up สำเร็จ/หน้า login ของ Web App
       window.location.assign(`profile.html?rollno=${encodeURIComponent(rollno)}`);
     } catch (error) {
       console.error('student lookup error:', error);

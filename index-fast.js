@@ -1524,6 +1524,7 @@ window.STUDENT_PROFILE_WEB_APP_URL =
   let isSearching = false;
   let autoSearchTimer = 0;
   let lastAutoRollno = '';
+  let activeResultMessageHandler = null;
 
   function showMessage(options) {
     if (window.Swal) return Swal.fire(options);
@@ -1596,13 +1597,36 @@ window.STUDENT_PROFILE_WEB_APP_URL =
   }
 
   function removeStudentResultFrame() {
-    const frame = document.getElementById('studentServicesResultFrame');
-    if (frame) frame.remove();
+    if (activeResultMessageHandler) {
+      window.removeEventListener('message', activeResultMessageHandler);
+      activeResultMessageHandler = null;
+    }
+
+    const overlay = document.getElementById('studentServicesResultFrame');
+    if (overlay) overlay.remove();
+
     document.documentElement.classList.remove('student-result-open');
     document.body.classList.remove('student-result-open');
   }
 
-  function showStudentResultFrame(rollno) {
+  function returnToStudentSearch() {
+    removeStudentResultFrame();
+
+    const input = document.getElementById('studentServicesId');
+    if (input) {
+      input.value = '';
+      input.focus();
+    }
+
+    lastAutoRollno = '';
+
+    const section = document.getElementById('studentServicesBox');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  function prepareStudentResultFrame(rollno) {
     const webAppUrl = getStudentWebAppUrl();
     if (!webAppUrl) {
       return Promise.reject(new Error('ยังไม่ได้กำหนด URL ของ Student Service Web App'));
@@ -1610,6 +1634,8 @@ window.STUDENT_PROFILE_WEB_APP_URL =
 
     removeStudentResultFrame();
 
+    // สร้าง iframe แบบซ่อนก่อน เพื่อให้ผู้ใช้ยังเห็น popup "กำลังค้นหา"
+    // จนกว่า Web App จะยืนยันว่า showResult() สร้างหน้าผลลัพธ์เสร็จแล้ว
     const overlay = document.createElement('div');
     overlay.id = 'studentServicesResultFrame';
     overlay.setAttribute('aria-label', 'ผลข้อมูลนักศึกษา');
@@ -1620,10 +1646,15 @@ window.STUDENT_PROFILE_WEB_APP_URL =
       'width:100vw',
       'height:100vh',
       'background:#fff',
-      'overflow:hidden'
+      'overflow:hidden',
+      'visibility:hidden',
+      'opacity:0',
+      'pointer-events:none',
+      'transition:opacity .12s ease'
     ].join(';');
 
     const frame = document.createElement('iframe');
+    frame.id = 'studentServicesWebAppFrame';
     frame.title = 'ข้อมูลนักศึกษา';
     frame.style.cssText = 'display:block;width:100%;height:100%;border:0;background:#fff;';
     frame.setAttribute('allow', 'fullscreen');
@@ -1640,38 +1671,68 @@ window.STUDENT_PROFILE_WEB_APP_URL =
 
     return new Promise((resolve, reject) => {
       let settled = false;
+
       const timeout = window.setTimeout(() => {
         if (settled) return;
         settled = true;
+        removeStudentResultFrame();
         reject(new Error('ระบบ Student Service ใช้เวลาตอบกลับนานเกินไป กรุณาลองใหม่'));
-      }, 45000);
+      }, 60000);
 
-      const settle = (ok, value) => {
+      const cleanupSearchOnly = () => {
+        window.clearTimeout(timeout);
+      };
+
+      const settleError = message => {
         if (settled) return;
         settled = true;
-        window.clearTimeout(timeout);
-        ok ? resolve(value) : reject(value);
+        cleanupSearchOnly();
+        removeStudentResultFrame();
+        reject(new Error(message || `ไม่พบข้อมูลนักศึกษา ${rollno}`));
       };
 
       const onMessage = event => {
         const data = event && event.data;
-        if (!data || data.type !== 'SSS_STUDENT_RESULT') return;
-        const resultRollno = String(data.rollno || '').replace(/\D/g, '').slice(0, 10);
-        if (resultRollno && resultRollno !== rollno) return;
-        window.removeEventListener('message', onMessage);
+        if (!data || typeof data !== 'object') return;
 
-        if (data.found) {
-          settle(true, data);
-        } else {
-          removeStudentResultFrame();
-          settle(false, new Error(data.error || `ไม่พบข้อมูลนักศึกษา ${rollno}`));
+        if (data.type === 'SSS_STUDENT_LOGOUT') {
+          returnToStudentSearch();
+          return;
         }
+
+        if (data.type !== 'SSS_STUDENT_RESULT') return;
+
+        const resultRollno = String(data.rollno || '')
+          .replace(/\D/g, '')
+          .slice(0, 10);
+
+        if (resultRollno && resultRollno !== rollno) return;
+
+        if (!data.found) {
+          settleError(data.error || `ไม่พบข้อมูลนักศึกษา ${rollno}`);
+          return;
+        }
+
+        if (settled) return;
+        settled = true;
+        cleanupSearchOnly();
+
+        // Web App ส่งข้อความนี้หลัง showResult() สร้างหน้าผลลัพธ์แล้ว
+        // ค่อยเปิด iframe ตอนนี้ จึงไม่เห็นจอขาวระหว่างค้นหา
+        overlay.style.visibility = 'visible';
+        overlay.style.opacity = '1';
+        overlay.style.pointerEvents = 'auto';
+        document.documentElement.classList.add('student-result-open');
+        document.body.classList.add('student-result-open');
+
+        resolve(data);
       };
 
+      activeResultMessageHandler = onMessage;
       window.addEventListener('message', onMessage);
+
       frame.addEventListener('error', () => {
-        window.removeEventListener('message', onMessage);
-        settle(false, new Error('ไม่สามารถโหลดหน้า Student Service ได้'));
+        settleError('ไม่สามารถโหลดหน้า Student Service ได้');
       }, { once: true });
     });
   }
@@ -1692,10 +1753,8 @@ window.STUDENT_PROFILE_WEB_APP_URL =
     showSearching(rollno);
 
     try {
-      // ใช้หน้า Index จริงของ Student Service Web App เป็นผลลัพธ์
-      // จึงได้หน้าตา เมนู ปุ่ม สไลด์ และฟังก์ชันเหมือน Web App เดิม
-      await showStudentResultFrame(rollno);
-      Swal.close();
+      await prepareStudentResultFrame(rollno);
+      if (window.Swal) Swal.close();
       try { sessionStorage.setItem('SSS_PROFILE_ROLLNO', rollno); } catch (_) {}
     } catch (error) {
       console.error('student result frame error:', error);
@@ -1720,13 +1779,27 @@ window.STUDENT_PROFILE_WEB_APP_URL =
     event?.preventDefault();
 
     const input = document.getElementById('studentServicesId');
-    const rollno = String(input?.value || '').replace(/\D/g, '').trim().slice(0, 10);
+    const rollno = String(input?.value || '')
+      .replace(/\D/g, '')
+      .trim()
+      .slice(0, 10);
 
     if (!rollno) {
       await showMessage({
         icon: 'warning',
         title: 'กรุณากรอกรหัสนักศึกษา',
         text: 'ระบุรหัสนักศึกษาก่อนเข้าสู่ระบบ',
+        confirmButtonText: 'ตกลง'
+      });
+      input?.focus();
+      return;
+    }
+
+    if (rollno.length !== 10) {
+      await showMessage({
+        icon: 'warning',
+        title: 'รหัสนักศึกษาไม่ครบ',
+        text: 'กรุณากรอกรหัสนักศึกษา 10 หลัก',
         confirmButtonText: 'ตกลง'
       });
       input?.focus();
@@ -1741,7 +1814,9 @@ window.STUDENT_PROFILE_WEB_APP_URL =
     const input = document.getElementById('studentServicesId');
 
     input?.addEventListener('input', () => {
-      const rollno = String(input.value || '').replace(/\D/g, '').slice(0, 10);
+      const rollno = String(input.value || '')
+        .replace(/\D/g, '')
+        .slice(0, 10);
       input.value = rollno;
 
       if (autoSearchTimer) window.clearTimeout(autoSearchTimer);
@@ -1754,8 +1829,9 @@ window.STUDENT_PROFILE_WEB_APP_URL =
       if (rollno === lastAutoRollno || isSearching) return;
       lastAutoRollno = rollno;
 
-      // เมื่อกรอกครบ 10 หลัก ให้ค้นหาอัตโนมัติ โดยยังคงปุ่ม LOGIN ไว้สำหรับการค้นหาแบบเดิม
-      autoSearchTimer = window.setTimeout(() => searchAndOpenProfile(rollno), 250);
+      autoSearchTimer = window.setTimeout(() => {
+        searchAndOpenProfile(rollno);
+      }, 250);
     });
 
     form?.addEventListener('submit', login);
@@ -1768,7 +1844,6 @@ window.STUDENT_PROFILE_WEB_APP_URL =
     init();
   }
 })();
-
 ;
 
 /* ===== student-service-ranking.js ===== */

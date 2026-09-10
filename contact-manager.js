@@ -87,7 +87,7 @@
 
   function normalizeContactRows(dataRows) {
     const rows = Array.isArray(dataRows)
-      ? dataRows.map((row, sourceIndex) => ({
+      ? dataRows.slice(0, 7).map((row, sourceIndex) => ({
           label: String(row?.label ?? ''),
           value: String(row?.value ?? ''),
           sourceIndex
@@ -123,13 +123,6 @@
     const ordered = preferredOrder
       .map(sourceIndex => rows[sourceIndex])
       .filter(Boolean);
-
-    // ถ้ามีข้อมูล M9:N9 ให้แสดงต่อท้าย โดยไม่เปลี่ยนตำแหน่งบันทึก
-    rows.slice(7).forEach(row => {
-      if (String(row.label || '').trim() || String(row.value || '').trim()) {
-        ordered.push(row);
-      }
-    });
 
     return ordered;
   }
@@ -315,14 +308,13 @@
 
           saveButton.addEventListener('click', async () => {
             const inputs = Array.from(document.querySelectorAll('[data-contact-value]'));
-            const maxSourceIndex = inputs.reduce((max, input) => {
-              const index = Number(input.dataset.contactValue);
-              return Number.isInteger(index) ? Math.max(max, index) : max;
-            }, 6);
-            const values = Array(maxSourceIndex + 1).fill('');
+            // ส่งกลับเฉพาะ N2:N8 = 7 ค่าเสมอ
+            const values = Array(7).fill('');
             inputs.forEach(input => {
               const index = Number(input.dataset.contactValue);
-              if (Number.isInteger(index) && index >= 0) values[index] = input.value.trim();
+              if (Number.isInteger(index) && index >= 0 && index < 7) {
+                values[index] = input.value.trim();
+              }
             });
             const validationError = validateValues(values);
 

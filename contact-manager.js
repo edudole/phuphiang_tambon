@@ -74,6 +74,11 @@
           host === 'lin.ee' || host.endsWith('.lin.ee');
       }
 
+      if (type === 'youtube') {
+        return host === 'youtube.com' || host.endsWith('.youtube.com') ||
+          host === 'youtu.be' || host.endsWith('.youtu.be');
+      }
+
       return false;
     } catch (_) {
       return false;
@@ -96,10 +101,12 @@
         autocomplete="off" spellcheck="false">`;
     }
 
-    if (rowNumber === 6 || rowNumber === 7) {
+    if (rowNumber === 6 || rowNumber === 7 || rowNumber === 8) {
       const placeholder = rowNumber === 6
         ? 'https://www.facebook.com/...'
-        : 'https://line.me/... หรือ https://lin.ee/...';
+        : rowNumber === 7
+          ? 'https://line.me/... หรือ https://lin.ee/...'
+          : 'https://www.youtube.com/@...';
       return `<input class="contact-manager-input" data-contact-value="${index}" type="url"
         value="${value}" placeholder="${placeholder}"
         autocomplete="off" spellcheck="false">`;
@@ -155,6 +162,7 @@
     const phone = values[3] || '';
     const facebook = values[4] || '';
     const line = values[5] || '';
+    const youtube = values[6] || '';
 
     if (coordinate && !validCoordinate(coordinate)) {
       return 'พิกัด N3 ไม่ถูกต้อง กรุณาระบุเป็น ละติจูด, ลองจิจูด เช่น 14.7996289, 100.6256088';
@@ -170,6 +178,10 @@
 
     if (!validUrlFor(line, 'line')) {
       return 'N7 ต้องเป็น URL ของ Line เท่านั้น เช่น https://line.me/... หรือ https://lin.ee/...';
+    }
+
+    if (!validUrlFor(youtube, 'youtube')) {
+      return 'N8 ต้องเป็น URL ของ YouTube เท่านั้น เช่น https://www.youtube.com/@ชื่อช่อง';
     }
 
     return '';
@@ -197,6 +209,7 @@
 
     const facebook = document.getElementById('contactFacebook');
     const line = document.getElementById('contactLine');
+    const youtube = document.getElementById('contactYoutube');
     const socials = document.getElementById('contactSocials');
 
     function setSocial(element, value) {
@@ -210,7 +223,8 @@
 
     const hasFacebook = setSocial(facebook, values[4]);
     const hasLine = setSocial(line, values[5]);
-    if (socials) socials.hidden = !(hasFacebook || hasLine);
+    const hasYoutube = setSocial(youtube, values[6]);
+    if (socials) socials.hidden = !(hasFacebook || hasLine || hasYoutube);
 
     const coordinate = text(values[1]);
     const wrap = document.getElementById('contactMapWrap');

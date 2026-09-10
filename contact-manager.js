@@ -85,18 +85,68 @@
     }
   }
 
-  function fieldForRow(row, index) {
+  function normalizeContactRows(dataRows) {
+    const rows = Array.isArray(dataRows)
+      ? dataRows.map((row, sourceIndex) => ({
+          label: String(row?.label ?? ''),
+          value: String(row?.value ?? ''),
+          sourceIndex
+        }))
+      : [];
+
+    // ต้องมีอย่างน้อย N2:N8 เสมอ โดย N8 = YouTube
+    const fallbackLabels = [
+      'ชื่อองค์กร/สกร อำเภอ',
+      'พิกัด',
+      'ที่อยู่ ศกร.',
+      'เบอร์โทร',
+      'Facebook',
+      'Line',
+      'Youtube'
+    ];
+
+    while (rows.length < 7) {
+      const sourceIndex = rows.length;
+      rows.push({
+        label: fallbackLabels[sourceIndex] || '',
+        value: '',
+        sourceIndex
+      });
+    }
+
+    // บังคับให้แถว N8 แสดงชื่อ Youtube แม้ M8 ว่าง
+    if (!String(rows[6].label || '').trim()) rows[6].label = 'Youtube';
+
+    // สลับเฉพาะลำดับที่แสดงผล: ที่อยู่ (N4) มาก่อน พิกัด (N3)
+    // แต่ sourceIndex ยังคงเดิม จึงบันทึกกลับลงชีตตำแหน่งเดิมทั้งหมด
+    const preferredOrder = [0, 2, 1, 3, 4, 5, 6];
+    const ordered = preferredOrder
+      .map(sourceIndex => rows[sourceIndex])
+      .filter(Boolean);
+
+    // ถ้ามีข้อมูล M9:N9 ให้แสดงต่อท้าย โดยไม่เปลี่ยนตำแหน่งบันทึก
+    rows.slice(7).forEach(row => {
+      if (String(row.label || '').trim() || String(row.value || '').trim()) {
+        ordered.push(row);
+      }
+    });
+
+    return ordered;
+  }
+
+  function fieldForRow(row) {
     const value = esc(row.value || '');
-    const rowNumber = index + 2;
+    const sourceIndex = Number(row.sourceIndex);
+    const rowNumber = sourceIndex + 2;
 
     if (rowNumber === 3) {
-      return `<input class="contact-manager-input" data-contact-value="${index}" type="text"
+      return `<input class="contact-manager-input" data-contact-value="${sourceIndex}" type="text"
         value="${value}" placeholder="เช่น 14.7996289, 100.6256088"
         autocomplete="off" spellcheck="false">`;
     }
 
     if (rowNumber === 5) {
-      return `<input class="contact-manager-input" data-contact-value="${index}" type="text"
+      return `<input class="contact-manager-input" data-contact-value="${sourceIndex}" type="text"
         inputmode="tel" value="${value}" placeholder="เช่น 036413582"
         autocomplete="off" spellcheck="false">`;
     }
@@ -107,23 +157,23 @@
         : rowNumber === 7
           ? 'https://line.me/... หรือ https://lin.ee/...'
           : 'https://www.youtube.com/@...';
-      return `<input class="contact-manager-input" data-contact-value="${index}" type="url"
+      return `<input class="contact-manager-input" data-contact-value="${sourceIndex}" type="url"
         value="${value}" placeholder="${placeholder}"
         autocomplete="off" spellcheck="false">`;
     }
 
     if (rowNumber === 4) {
       return `<textarea class="contact-manager-input contact-manager-textarea"
-        data-contact-value="${index}" rows="3">${value}</textarea>`;
+        data-contact-value="${sourceIndex}" rows="3">${value}</textarea>`;
     }
 
-    return `<input class="contact-manager-input" data-contact-value="${index}" type="text"
+    return `<input class="contact-manager-input" data-contact-value="${sourceIndex}" type="text"
       value="${value}" autocomplete="off">`;
   }
 
   function managerHtml(data) {
     const headers = data.headers || ['รายการ', 'ระบุ'];
-    const rows = Array.isArray(data.rows) ? data.rows : [];
+    const rows = normalizeContactRows(data.rows);
 
     return `
       <div class="contact-manager-popup">
@@ -139,10 +189,10 @@
               </tr>
             </thead>
             <tbody>
-              ${rows.map((row, index) => `
+              ${rows.map(row => `
                 <tr>
                   <td class="contact-manager-label">${esc(row.label || '')}</td>
-                  <td>${fieldForRow(row, index)}</td>
+                  <td>${fieldForRow(row)}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -265,7 +315,15 @@
 
           saveButton.addEventListener('click', async () => {
             const inputs = Array.from(document.querySelectorAll('[data-contact-value]'));
-            const values = inputs.map(input => input.value.trim());
+            const maxSourceIndex = inputs.reduce((max, input) => {
+              const index = Number(input.dataset.contactValue);
+              return Number.isInteger(index) ? Math.max(max, index) : max;
+            }, 6);
+            const values = Array(maxSourceIndex + 1).fill('');
+            inputs.forEach(input => {
+              const index = Number(input.dataset.contactValue);
+              if (Number.isInteger(index) && index >= 0) values[index] = input.value.trim();
+            });
             const validationError = validateValues(values);
 
             errorBox.textContent = '';

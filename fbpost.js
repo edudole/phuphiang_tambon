@@ -65,6 +65,7 @@
 
   function fillAreaFilter(items) {
     const select = document.getElementById('fbAreaFilter');
+    if (!select) return;
     const areas = [...new Set(
       items.map(item => String(item.area || '').trim()).filter(Boolean)
     )].sort((a,b) => a.localeCompare(b,'th'));
@@ -75,7 +76,8 @@
   }
 
   function updateFilteredItems(resetPage = false) {
-    const selected = document.getElementById('fbAreaFilter').value;
+    const areaFilter = document.getElementById('fbAreaFilter');
+    const selected = areaFilter ? areaFilter.value : '';
     state.filteredItems = uniqueLatest(
       state.items.filter(item => !selected || item.area === selected)
     );
@@ -94,7 +96,8 @@
     const prevBtn = document.getElementById('fbPrevBtn');
     const nextBtn = document.getElementById('fbNextBtn');
     const indicator = document.getElementById('fbPageIndicator');
-    const selected = document.getElementById('fbAreaFilter').value;
+    const areaFilter = document.getElementById('fbAreaFilter');
+    const selected = areaFilter ? areaFilter.value : '';
 
     const total = state.filteredItems.length;
     const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
@@ -198,10 +201,13 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('fbAreaFilter').addEventListener('change', () => {
-      updateFilteredItems(true);
-      render();
-    });
+    const areaFilter = document.getElementById('fbAreaFilter');
+    if (areaFilter) {
+      areaFilter.addEventListener('change', () => {
+        updateFilteredItems(true);
+        render();
+      });
+    }
     document.getElementById('fbPrevBtn').addEventListener('click', goPrevious);
     document.getElementById('fbNextBtn').addEventListener('click', goNext);
     load();

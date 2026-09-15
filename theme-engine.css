@@ -1,0 +1,164 @@
+/* LP360 Theme Engine v1 - 2026-09-15
+   Presentation layer only. Existing data, markup, functions and APIs remain unchanged. */
+:root,
+html[data-site-theme="modern"] {
+  --lp-bg: #f5f7fb;
+  --lp-surface: #ffffff;
+  --lp-surface-2: #eef4ff;
+  --lp-text: #14213d;
+  --lp-muted: #60708d;
+  --lp-primary: #2563eb;
+  --lp-primary-2: #7c3aed;
+  --lp-accent: #06b6d4;
+  --lp-border: rgba(37, 99, 235, .14);
+  --lp-radius: 22px;
+  --lp-radius-sm: 14px;
+  --lp-shadow: 0 16px 42px rgba(22, 35, 70, .10);
+  --lp-section-gap: 28px;
+  --lp-font: "Noto Sans Thai", "Prompt", system-ui, sans-serif;
+}
+html[data-site-theme="government"] {
+  --lp-bg: #f3f5f7;
+  --lp-surface: #ffffff;
+  --lp-surface-2: #e9eef3;
+  --lp-text: #172b3a;
+  --lp-muted: #536876;
+  --lp-primary: #183b56;
+  --lp-primary-2: #8b6f2d;
+  --lp-accent: #b89543;
+  --lp-border: rgba(24, 59, 86, .22);
+  --lp-radius: 8px;
+  --lp-radius-sm: 6px;
+  --lp-shadow: 0 8px 22px rgba(24, 59, 86, .10);
+  --lp-section-gap: 22px;
+  --lp-font: "Noto Sans Thai", Tahoma, sans-serif;
+}
+html[data-site-theme="education"] {
+  --lp-bg: #fffaf2;
+  --lp-surface: #ffffff;
+  --lp-surface-2: #f1f8ff;
+  --lp-text: #24304a;
+  --lp-muted: #667085;
+  --lp-primary: #7c3aed;
+  --lp-primary-2: #ec4899;
+  --lp-accent: #f59e0b;
+  --lp-border: rgba(124, 58, 237, .16);
+  --lp-radius: 26px;
+  --lp-radius-sm: 18px;
+  --lp-shadow: 0 14px 32px rgba(124, 58, 237, .12);
+  --lp-section-gap: 30px;
+  --lp-font: "Prompt", "Noto Sans Thai", system-ui, sans-serif;
+}
+html[data-site-theme="minimal"] {
+  --lp-bg: #ffffff;
+  --lp-surface: #ffffff;
+  --lp-surface-2: #f7f7f7;
+  --lp-text: #18181b;
+  --lp-muted: #71717a;
+  --lp-primary: #18181b;
+  --lp-primary-2: #52525b;
+  --lp-accent: #3f3f46;
+  --lp-border: #e4e4e7;
+  --lp-radius: 4px;
+  --lp-radius-sm: 3px;
+  --lp-shadow: none;
+  --lp-section-gap: 20px;
+  --lp-font: "Noto Sans Thai", system-ui, sans-serif;
+}
+html[data-site-theme="premium"] {
+  --lp-bg: #0d1424;
+  --lp-surface: #151f34;
+  --lp-surface-2: #1c2942;
+  --lp-text: #f8fafc;
+  --lp-muted: #b8c2d3;
+  --lp-primary: #d4af37;
+  --lp-primary-2: #f4d675;
+  --lp-accent: #7dd3fc;
+  --lp-border: rgba(212, 175, 55, .28);
+  --lp-radius: 24px;
+  --lp-radius-sm: 14px;
+  --lp-shadow: 0 18px 45px rgba(0,0,0,.30);
+  --lp-section-gap: 30px;
+  --lp-font: "Noto Sans Thai", "Prompt", system-ui, sans-serif;
+}
+
+html[data-site-theme] body {
+  background: var(--lp-bg) !important;
+  color: var(--lp-text);
+  font-family: var(--lp-font);
+  transition: background-color .22s ease, color .22s ease;
+}
+html[data-site-theme] main { color: var(--lp-text); }
+html[data-site-theme] main > section,
+html[data-site-theme] .page-section,
+html[data-site-theme] .content-section {
+  border-color: var(--lp-border);
+}
+html[data-site-theme] header,
+html[data-site-theme] .site-header,
+html[data-site-theme] .topbar,
+html[data-site-theme] .navbar,
+html[data-site-theme] .nav-shell {
+  border-color: var(--lp-border) !important;
+}
+html[data-site-theme] a { text-underline-offset: 3px; }
+
+/* Common cards across LP360 pages */
+html[data-site-theme] :is(
+  .home-summary-card,.news-card,.activity-card,.best-practice-card,.innovation-card,
+  .media-card,.reward-card,.course-card,.report-card,.fbpost-card,.team-card,
+  .contact-card,.vision-card,.cliproom-card,.shopactivity-card,.learning-card,
+  .book-card,.user-card,.profile-card,.panel,.card
+) {
+  background: var(--lp-surface) !important;
+  color: var(--lp-text);
+  border-color: var(--lp-border) !important;
+  border-radius: var(--lp-radius) !important;
+  box-shadow: var(--lp-shadow) !important;
+}
+html[data-site-theme] :is(
+  .editwebsite-btn,.admin-manage-data-button,.best-practice-box-admin-btn,
+  .shopactivity-open-all,.fbpost-box-more-btn,.best-practice-box-more-btn,
+  button[type="submit"],.primary-btn,.btn-primary
+) {
+  border-radius: var(--lp-radius-sm) !important;
+}
+html[data-site-theme] :is(h1,h2,h3,.section-title,.page-title) { color: var(--lp-text); }
+html[data-site-theme] :is(.subtitle,.description,.meta,.muted,.section-description) { color: var(--lp-muted); }
+html[data-site-theme] :is(input,select,textarea) {
+  border-color: var(--lp-border) !important;
+  border-radius: var(--lp-radius-sm) !important;
+}
+html[data-site-theme="premium"] :is(input,select,textarea) {
+  background:#101a2d !important; color:#f8fafc !important;
+}
+html[data-site-theme="premium"] :is(.modal,.dialog,.swal2-popup) { color:#172033; }
+
+/* Theme signatures */
+html[data-site-theme="government"] .hero { border-bottom: 4px solid var(--lp-accent) !important; }
+html[data-site-theme="government"] :is(.eyebrow,.activity-box-kicker) { letter-spacing:.04em; text-transform:none; }
+html[data-site-theme="education"] .hero { border-radius: 0 0 42px 42px; overflow:hidden; }
+html[data-site-theme="education"] :is(.home-summary-card,.news-card,.activity-card) { transform: translateZ(0); }
+html[data-site-theme="minimal"] * { animation-duration: .01ms !important; }
+html[data-site-theme="minimal"] .hero { filter:saturate(.82); }
+html[data-site-theme="minimal"] :is(.home-summary-card,.news-card,.activity-card,.best-practice-card,.innovation-card,.media-card,.reward-card,.course-card,.report-card,.fbpost-card) { border:1px solid var(--lp-border) !important; }
+html[data-site-theme="premium"] .hero { background-blend-mode:multiply; }
+html[data-site-theme="premium"] main > section:nth-of-type(even) { background: rgba(255,255,255,.025); }
+html[data-site-theme="premium"] :is(.activity-box-kicker,.eyebrow,.section-kicker) { color:var(--lp-primary-2) !important; }
+html[data-site-theme="premium"] :is(a,button) { border-color:var(--lp-border); }
+
+/* Theme manager */
+.lp360-theme-grid{display:grid;grid-template-columns:repeat(5,minmax(105px,1fr));gap:10px;margin-top:12px}
+.lp360-theme-choice{position:relative;display:block;border:2px solid #e5e7eb;border-radius:14px;padding:10px;cursor:pointer;text-align:left;background:#fff;transition:.15s}
+.lp360-theme-choice:hover{transform:translateY(-1px);border-color:#93c5fd}
+.lp360-theme-choice.is-selected{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.10)}
+.lp360-theme-choice input{position:absolute;opacity:0;pointer-events:none}
+.lp360-theme-swatch{height:56px;border-radius:9px;margin-bottom:8px;border:1px solid rgba(0,0,0,.08)}
+.lp360-theme-name{font-weight:800;font-size:13px;color:#111827}
+.lp360-theme-desc{font-size:11px;color:#6b7280;line-height:1.35;margin-top:2px}
+.lp360-swatch-modern{background:linear-gradient(135deg,#2563eb,#7c3aed 62%,#fff 62%)}
+.lp360-swatch-government{background:linear-gradient(135deg,#183b56 0 58%,#b89543 58% 66%,#f3f5f7 66%)}
+.lp360-swatch-education{background:linear-gradient(135deg,#7c3aed,#ec4899 50%,#f59e0b 50% 66%,#fffaf2 66%)}
+.lp360-swatch-minimal{background:linear-gradient(135deg,#18181b 0 15%,#fff 15% 82%,#e4e4e7 82%)}
+.lp360-swatch-premium{background:linear-gradient(135deg,#0d1424 0 58%,#d4af37 58% 64%,#151f34 64%)}
+@media(max-width:720px){.lp360-theme-grid{grid-template-columns:1fr 1fr}.lp360-theme-choice:last-child{grid-column:1/-1}}

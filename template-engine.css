@@ -1,0 +1,212 @@
+/* LP360 Website Template Engine v1
+   Five structural templates. Existing DOM ids/data bindings remain untouched. */
+:root {
+  --tpl-max: 1180px;
+  --tpl-bg: #f5f7fb;
+  --tpl-surface: #fff;
+  --tpl-text: #172033;
+  --tpl-muted: #667085;
+  --tpl-primary: #2563eb;
+  --tpl-accent: #14b8a6;
+  --tpl-border: rgba(15,23,42,.10);
+  --tpl-radius: 22px;
+  --tpl-shadow: 0 18px 44px rgba(17,24,39,.10);
+  --tpl-hero-min: 590px;
+  --tpl-font: "Kanit","Noto Sans Thai","Prompt",system-ui,sans-serif;
+}
+html[data-site-template="adventure"] { --tpl-bg:#f7f7f2;--tpl-surface:#fff;--tpl-text:#24342d;--tpl-muted:#6b7a72;--tpl-primary:#3d6f55;--tpl-accent:#9cab57;--tpl-border:rgba(50,90,65,.14);--tpl-radius:10px;--tpl-shadow:0 16px 36px rgba(31,62,44,.12);--tpl-hero-min:680px; }
+html[data-site-template="studio"] { --tpl-bg:#10131b;--tpl-surface:#191e29;--tpl-text:#f8fafc;--tpl-muted:#b4bdca;--tpl-primary:#c8ff2f;--tpl-accent:#90f000;--tpl-border:rgba(255,255,255,.10);--tpl-radius:30px;--tpl-shadow:0 24px 60px rgba(0,0,0,.35);--tpl-hero-min:720px; }
+html[data-site-template="creative"] { --tpl-bg:#242424;--tpl-surface:#fff;--tpl-text:#17172d;--tpl-muted:#68687a;--tpl-primary:#6d28d9;--tpl-accent:#facc15;--tpl-border:rgba(109,40,217,.13);--tpl-radius:34px;--tpl-shadow:0 22px 54px rgba(33,16,76,.15);--tpl-hero-min:640px; }
+html[data-site-template="campaign"] { --tpl-bg:#fff;--tpl-surface:#fff;--tpl-text:#29221d;--tpl-muted:#75685e;--tpl-primary:#f04a20;--tpl-accent:#f2a312;--tpl-border:rgba(119,76,43,.14);--tpl-radius:3px;--tpl-shadow:0 12px 30px rgba(64,42,24,.10);--tpl-hero-min:610px; }
+html[data-site-template="education"] { --tpl-bg:#f7fafc;--tpl-surface:#fff;--tpl-text:#22354a;--tpl-muted:#6d7d8d;--tpl-primary:#1889b9;--tpl-accent:#49b8ae;--tpl-border:rgba(24,137,185,.12);--tpl-radius:24px;--tpl-shadow:0 18px 42px rgba(35,95,121,.11);--tpl-hero-min:570px; }
+
+html[data-site-template] body { background:var(--tpl-bg)!important;color:var(--tpl-text);font-family:var(--tpl-font); }
+html[data-site-template] body *,html[data-site-template] body *::before,html[data-site-template] body *::after{box-sizing:border-box}
+html[data-site-template] body :is(h1,h2,h3,h4,.page-title,.section-title){color:var(--tpl-text)}
+html[data-site-template] body :is(.subtitle,.description,.meta,.muted,.page-subtitle,.section-description){color:var(--tpl-muted)}
+html[data-site-template] body :is(.container,.bp-container,.innovation-container,.media-container,.reward-container,.course-container,.report-container,.fb-container,.about-container,.team-container){max-width:var(--tpl-max)}
+html[data-site-template] body :is(input,select,textarea){border-color:var(--tpl-border);border-radius:max(8px,calc(var(--tpl-radius)*.45))}
+html[data-site-template] body :is(.card,.news-card,.activity-card,.best-practice-card,.innovation-card,.media-card,.reward-card,.course-card,.report-card,.fbpost-card,.team-card,.user-card,.profile-card,.shopactivity-card,.learning-card,.panel){background:var(--tpl-surface);border-color:var(--tpl-border)!important;border-radius:var(--tpl-radius)!important;box-shadow:var(--tpl-shadow)}
+html[data-site-template] body :is(button,.btn,.primary-btn,.admin-manage-data-button,.shopactivity-open-all,.fbpost-box-more-btn,.best-practice-box-more-btn){font-family:inherit}
+
+/* homepage stays flex-column so template-specific order can change without moving DOM nodes */
+html[data-template-page="home"] body main{display:flex;flex-direction:column;overflow:hidden}
+html[data-template-page="home"] body main>section{position:relative;isolation:isolate}
+html[data-template-page="home"] #home{order:1;min-height:var(--tpl-hero-min)}
+html[data-template-page="home"] #studentBox{order:2}
+html[data-template-page="home"] #news{order:3}
+html[data-template-page="home"] #learningSourceBox{order:4}
+html[data-template-page="home"] #cliproomBox{order:5}
+html[data-template-page="home"] #learningBaseModule{order:6}
+html[data-template-page="home"] :is(#activityBox,#bestPracticeBox){order:7}
+html[data-template-page="home"] #FBpostBox{order:8}
+html[data-template-page="home"] :is(#studentServicesBox,#featured){order:9}
+html[data-template-page="home"] #userBox{order:10}
+html[data-template-page="home"] #buttonsection{order:11}
+
+/* Shared structural reset for hero */
+html[data-template-page="home"] #home .hero-overlay{inset:0;background-position:center!important;background-size:cover!important}
+html[data-template-page="home"] #home .hero-content{position:relative;z-index:3;min-height:inherit;display:flex;flex-direction:column;justify-content:center}
+html[data-template-page="home"] #home .hero-content h1{max-width:780px;font-weight:800;line-height:1.05}
+html[data-template-page="home"] #home .hero-content p{max-width:680px}
+html[data-template-page="home"] #home::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1}
+
+/* =============== TEMPLATE 1: ADVENTURE / TRAVEL =============== */
+html[data-site-template="adventure"] body .announcement{background:#44563f!important;color:#fff}
+html[data-site-template="adventure"] body .site-header{position:absolute;top:36px;left:0;right:0;z-index:50;background:transparent!important;border:0!important;box-shadow:none!important;color:#fff}
+html[data-site-template="adventure"] body .site-header :is(a,button,.brand){color:#fff!important;text-shadow:0 1px 5px rgba(0,0,0,.28)}
+html[data-site-template="adventure"][data-template-page="home"] #home{min-height:76vh;border-radius:0 0 42px 42px;overflow:hidden}
+html[data-site-template="adventure"][data-template-page="home"] #home::after{background:linear-gradient(90deg,rgba(15,42,25,.70),rgba(18,45,29,.24) 56%,rgba(0,0,0,.06))}
+html[data-site-template="adventure"][data-template-page="home"] #home .hero-content{align-items:flex-start;padding-top:90px;color:#fff}
+html[data-site-template="adventure"][data-template-page="home"] #home .hero-content :is(h1,p,.eyebrow){color:#fff!important;text-align:left!important}
+html[data-site-template="adventure"][data-template-page="home"] #home h1{font-size:clamp(44px,6.5vw,86px);max-width:720px;text-transform:none}
+html[data-site-template="adventure"][data-template-page="home"] #studentBox{order:3;background:#fff;margin:-54px auto 34px;width:min(1120px,calc(100% - 34px));z-index:8;border-radius:18px;box-shadow:0 22px 55px rgba(27,60,39,.16);padding:24px}
+html[data-site-template="adventure"][data-template-page="home"] #news{order:2;padding:78px 0 92px;background:#fff}
+html[data-site-template="adventure"][data-template-page="home"] #learningSourceBox{order:4;background:#f1f4ed;padding:76px 0}
+html[data-site-template="adventure"][data-template-page="home"] #cliproomBox{order:5;background:#fff;padding:76px 0}
+html[data-site-template="adventure"][data-template-page="home"] #learningBaseModule{order:6;background:#eaf0e7!important;padding:76px 0!important}
+html[data-site-template="adventure"][data-template-page="home"] :is(#activityBox,#bestPracticeBox,#FBpostBox,#studentServicesBox,#featured,#buttonsection){padding-top:72px!important;padding-bottom:72px!important}
+html[data-site-template="adventure"] body :is(.news-card,.activity-card,.best-practice-card,.innovation-card,.media-card,.reward-card,.course-card,.report-card,.fbpost-card){border-radius:10px!important;overflow:hidden;transition:transform .22s ease,box-shadow .22s ease}
+html[data-site-template="adventure"] body :is(.news-card,.activity-card,.best-practice-card,.innovation-card,.media-card,.reward-card,.course-card,.report-card,.fbpost-card):hover{transform:translateY(-5px);box-shadow:0 22px 45px rgba(38,65,47,.16)!important}
+html[data-site-template="adventure"] body footer{background:#263b2e!important;color:#e8f0e8}
+
+/* =============== TEMPLATE 2: DARK STUDIO =============== */
+html[data-site-template="studio"] body .announcement{background:#0b0e14!important;color:#dce3ea}
+html[data-site-template="studio"] body .site-header{background:#10131b!important;border-bottom:1px solid rgba(255,255,255,.08)!important;color:#fff;position:relative;z-index:20}
+html[data-site-template="studio"] body .site-header :is(a,button,.brand){color:#f8fafc!important}
+html[data-site-template="studio"][data-template-page="home"] #home{width:min(1180px,calc(100% - 46px));margin:24px auto 38px;border-radius:38px;overflow:hidden;border:1px solid rgba(255,255,255,.12)}
+html[data-site-template="studio"][data-template-page="home"] #home::after{background:linear-gradient(120deg,rgba(9,12,18,.94) 0%,rgba(12,16,25,.75) 47%,rgba(10,14,20,.18) 78%)}
+html[data-site-template="studio"][data-template-page="home"] #home .hero-content{align-items:center;text-align:center;color:#fff;padding:80px 5% 56px}
+html[data-site-template="studio"][data-template-page="home"] #home .hero-content :is(h1,p,.eyebrow){color:#fff!important;text-align:center!important}
+html[data-site-template="studio"][data-template-page="home"] #home h1{font-size:clamp(42px,6vw,78px);max-width:950px;letter-spacing:-.03em}
+html[data-site-template="studio"][data-template-page="home"] #news{order:2;background:#10131b;padding:36px 0 86px}
+html[data-site-template="studio"][data-template-page="home"] :is(#activityBox,#bestPracticeBox){order:3;background:#151923;padding:78px 0!important}
+html[data-site-template="studio"][data-template-page="home"] #studentBox{order:4;background:#10131b;padding:45px 0}
+html[data-site-template="studio"][data-template-page="home"] #cliproomBox{order:5;background:#151923;padding:82px 0}
+html[data-site-template="studio"][data-template-page="home"] #learningSourceBox{order:6;background:#10131b;padding:82px 0}
+html[data-site-template="studio"][data-template-page="home"] #learningBaseModule{order:7;background:#151923!important;padding:82px 0!important}
+html[data-site-template="studio"][data-template-page="home"] #FBpostBox{order:8;background:#10131b;padding:82px 0!important}
+html[data-site-template="studio"][data-template-page="home"] :is(#studentServicesBox,#featured,#userBox,#buttonsection){background:#151923;padding-top:72px!important;padding-bottom:72px!important}
+html[data-site-template="studio"] body :is(.news-card,.activity-card,.best-practice-card,.innovation-card,.media-card,.reward-card,.course-card,.report-card,.fbpost-card,.team-card){border:1px solid rgba(255,255,255,.10)!important;background:#191e29!important;color:#f8fafc!important}
+html[data-site-template="studio"] body :is(.news-card,.activity-card,.best-practice-card,.innovation-card,.media-card,.reward-card,.course-card,.report-card,.fbpost-card,.team-card) :is(h2,h3,h4,strong){color:#fff!important}
+html[data-site-template="studio"] body footer{background:#080a0f!important;color:#d2d8e1}
+
+/* =============== TEMPLATE 3: CREATIVE 3D =============== */
+html[data-site-template="creative"] body{padding:54px 4.2%;background:#252525!important}
+html[data-site-template="creative"] body>.announcement{border-radius:24px 24px 0 0;overflow:hidden;background:#fff!important}
+html[data-site-template="creative"] body>.site-header{background:#fff!important;border:0!important;box-shadow:none!important;padding:8px 22px}
+html[data-site-template="creative"] body>.site-header :is(a,button,.brand){color:#161626!important}
+html[data-site-template="creative"] body>main{background:#fff;border-radius:0 0 26px 26px;overflow:hidden}
+html[data-site-template="creative"][data-template-page="home"] #home{margin:0 3.2% 54px;border-radius:36px;overflow:hidden;background:linear-gradient(125deg,#6d28d9,#c026d3 55%,#ef4444)}
+html[data-site-template="creative"][data-template-page="home"] #home .hero-overlay{opacity:.72!important;mix-blend-mode:luminosity;transform:translateX(32%);width:68%}
+html[data-site-template="creative"][data-template-page="home"] #home::after{background:linear-gradient(90deg,rgba(87,28,170,.98) 0 46%,rgba(125,34,180,.50) 70%,rgba(0,0,0,.08))}
+html[data-site-template="creative"][data-template-page="home"] #home .hero-content{align-items:flex-start;padding:72px 6%;color:#fff}
+html[data-site-template="creative"][data-template-page="home"] #home .hero-content :is(h1,p,.eyebrow){color:#fff!important;text-align:left!important}
+html[data-site-template="creative"][data-template-page="home"] #home h1{font-size:clamp(48px,6.5vw,90px);max-width:720px;letter-spacing:-.04em}
+html[data-site-template="creative"][data-template-page="home"] #studentBox{order:2;background:#fff;padding:22px 4% 70px}
+html[data-site-template="creative"][data-template-page="home"] #cliproomBox{order:3;background:#f7f2ff;padding:76px 0}
+html[data-site-template="creative"][data-template-page="home"] #learningBaseModule{order:4;background:#fff4fb!important;padding:76px 0!important}
+html[data-site-template="creative"][data-template-page="home"] #news{order:5;background:#fff;padding:78px 0}
+html[data-site-template="creative"][data-template-page="home"] :is(#learningSourceBox,#activityBox,#bestPracticeBox,#FBpostBox,#studentServicesBox,#featured,#userBox,#buttonsection){padding-top:74px!important;padding-bottom:74px!important}
+html[data-site-template="creative"] body :is(.news-card,.activity-card,.best-practice-card,.innovation-card,.media-card,.reward-card,.course-card,.report-card,.fbpost-card,.team-card){border-radius:30px!important;border:1px solid rgba(109,40,217,.10)!important;overflow:hidden}
+html[data-site-template="creative"] body :is(.news-card,.activity-card,.best-practice-card,.innovation-card,.media-card,.reward-card,.course-card,.report-card,.fbpost-card,.team-card):nth-child(3n+1){transform:rotate(-.35deg)}
+html[data-site-template="creative"] body :is(.news-card,.activity-card,.best-practice-card,.innovation-card,.media-card,.reward-card,.course-card,.report-card,.fbpost-card,.team-card):nth-child(3n+2){transform:translateY(12px)}
+html[data-site-template="creative"] body footer{margin-top:36px;border-radius:28px;background:#17171d!important;color:#f4f4f5}
+
+/* =============== TEMPLATE 4: CAMPAIGN =============== */
+html[data-site-template="campaign"] body .announcement{background:#ef4b23!important;color:#fff}
+html[data-site-template="campaign"] body .site-header{background:#fff!important;border-bottom:4px solid #f2a312!important;box-shadow:none!important}
+html[data-site-template="campaign"] body .site-header :is(a,button){font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+html[data-site-template="campaign"][data-template-page="home"] #home{min-height:620px;overflow:hidden}
+html[data-site-template="campaign"][data-template-page="home"] #home::after{background:linear-gradient(90deg,rgba(26,19,13,.72),rgba(24,18,13,.26) 68%,transparent)}
+html[data-site-template="campaign"][data-template-page="home"] #home .hero-content{align-items:center;text-align:center;color:#fff;padding:70px 12%}
+html[data-site-template="campaign"][data-template-page="home"] #home .hero-content :is(h1,p,.eyebrow){color:#fff!important;text-align:center!important}
+html[data-site-template="campaign"][data-template-page="home"] #home h1{font-size:clamp(46px,6vw,82px);max-width:900px;font-weight:800}
+html[data-site-template="campaign"][data-template-page="home"] #news{order:2;padding:58px 0 80px;background:#fff}
+html[data-site-template="campaign"][data-template-page="home"] #learningBaseModule{order:3;background:#fff7e9!important;padding:72px 0!important}
+html[data-site-template="campaign"][data-template-page="home"] :is(#activityBox,#bestPracticeBox){order:4;background:#fff;padding:72px 0!important}
+html[data-site-template="campaign"][data-template-page="home"] #studentBox{order:5;background:#f7f1e9;padding:46px 0}
+html[data-site-template="campaign"][data-template-page="home"] #learningSourceBox{order:6;background:#fff7e9;padding:72px 0}
+html[data-site-template="campaign"][data-template-page="home"] #FBpostBox{order:7;background:#fff;padding:72px 0!important}
+html[data-site-template="campaign"][data-template-page="home"] #cliproomBox{order:8;background:#f7f1e9;padding:72px 0}
+html[data-site-template="campaign"] body :is(.news-card,.activity-card,.best-practice-card,.innovation-card,.media-card,.reward-card,.course-card,.report-card,.fbpost-card){border-radius:2px!important;border-top:5px solid var(--tpl-primary)!important}
+html[data-site-template="campaign"] body footer{background:#2f2925!important;color:#fff}
+
+/* =============== TEMPLATE 5: EDUCATION / COACHING =============== */
+html[data-site-template="education"] body .announcement{background:#f8fbfd!important;color:#31546a}
+html[data-site-template="education"] body .site-header{background:rgba(255,255,255,.96)!important;border-bottom:1px solid rgba(24,137,185,.10)!important;box-shadow:0 7px 22px rgba(41,102,128,.07)!important}
+html[data-site-template="education"][data-template-page="home"] #home{min-height:570px;overflow:hidden;background:#dff3f7}
+html[data-site-template="education"][data-template-page="home"] #home .hero-overlay{width:62%;left:auto!important;right:0!important;background-position:center!important;clip-path:ellipse(82% 82% at 78% 50%)}
+html[data-site-template="education"][data-template-page="home"] #home::after{background:linear-gradient(90deg,#effbfe 0 43%,rgba(239,251,254,.90) 52%,rgba(239,251,254,.08) 78%)}
+html[data-site-template="education"][data-template-page="home"] #home .hero-content{align-items:flex-start;padding:66px 48% 66px 0;min-height:570px}
+html[data-site-template="education"][data-template-page="home"] #home .hero-content :is(h1,p,.eyebrow){text-align:left!important;color:#214158!important}
+html[data-site-template="education"][data-template-page="home"] #home h1{font-size:clamp(42px,5.4vw,72px);max-width:620px}
+html[data-site-template="education"][data-template-page="home"] :is(#studentServicesBox,#featured){order:2;background:#fff;padding:58px 0!important}
+html[data-site-template="education"][data-template-page="home"] #studentBox{order:3;background:#f2fafb;padding:34px 0}
+html[data-site-template="education"][data-template-page="home"] #news{order:4;background:#fff;padding:72px 0}
+html[data-site-template="education"][data-template-page="home"] #learningSourceBox{order:5;background:#eef8fb;padding:72px 0}
+html[data-site-template="education"][data-template-page="home"] #cliproomBox{order:6;background:#fff;padding:72px 0}
+html[data-site-template="education"][data-template-page="home"] #learningBaseModule{order:7;background:#eff9f7!important;padding:72px 0!important}
+html[data-site-template="education"][data-template-page="home"] :is(#activityBox,#bestPracticeBox,#FBpostBox,#userBox,#buttonsection){padding-top:70px!important;padding-bottom:70px!important}
+html[data-site-template="education"] body :is(.news-card,.activity-card,.best-practice-card,.innovation-card,.media-card,.reward-card,.course-card,.report-card,.fbpost-card,.team-card){border:1px solid rgba(24,137,185,.12)!important;overflow:hidden}
+html[data-site-template="education"] body footer{background:#24495e!important;color:#eefaff}
+
+/* INNER PAGES — same content, different composition */
+html[data-template-page]:not([data-template-page="home"]) body{min-height:100vh}
+html[data-template-page]:not([data-template-page="home"]) body>main{position:relative}
+html[data-site-template="adventure"][data-template-page]:not([data-template-page="home"]) body>main{max-width:1180px;margin:42px auto;padding:42px;background:#fff;border-radius:16px;box-shadow:var(--tpl-shadow)}
+html[data-site-template="adventure"][data-template-page]:not([data-template-page="home"]) body>main::before{content:"";display:block;width:72px;height:5px;border-radius:8px;background:#91a15d;margin:0 0 26px}
+html[data-site-template="studio"][data-template-page]:not([data-template-page="home"]) body>main{max-width:1220px;margin:36px auto;padding:48px;background:#151923;border:1px solid rgba(255,255,255,.10);border-radius:34px;box-shadow:0 25px 70px rgba(0,0,0,.30)}
+html[data-site-template="studio"][data-template-page]:not([data-template-page="home"]) body>main :is(h1,h2,h3){color:#fff!important}
+html[data-site-template="studio"][data-template-page]:not([data-template-page="home"]) body>main :is(p,label,span){color:inherit}
+html[data-site-template="creative"][data-template-page]:not([data-template-page="home"]) body{padding:44px 4%;background:#252525!important}
+html[data-site-template="creative"][data-template-page]:not([data-template-page="home"]) body>main{max-width:1260px;margin:0 auto;padding:54px;background:#fff;border-radius:34px;min-height:75vh;box-shadow:0 28px 70px rgba(0,0,0,.22)}
+html[data-site-template="creative"][data-template-page]:not([data-template-page="home"]) body>main::before{content:"";display:block;height:150px;margin:-24px -20px 34px;border-radius:26px;background:linear-gradient(115deg,#6d28d9,#c026d3 54%,#f97316)}
+html[data-site-template="campaign"][data-template-page]:not([data-template-page="home"]) body>main{max-width:1180px;margin:0 auto;padding:50px 28px 80px;background:#fff}
+html[data-site-template="campaign"][data-template-page]:not([data-template-page="home"]) body>main::before{content:"";display:block;width:100%;height:12px;background:linear-gradient(90deg,#ef4b23 0 58%,#f2a312 58%);margin:0 0 34px}
+html[data-site-template="education"][data-template-page]:not([data-template-page="home"]) body>main{max-width:1180px;margin:34px auto;padding:48px;background:#fff;border-radius:28px;box-shadow:var(--tpl-shadow)}
+html[data-site-template="education"][data-template-page]:not([data-template-page="home"]) body>main::before{content:"";display:block;width:120px;height:8px;border-radius:99px;background:linear-gradient(90deg,#1889b9,#49b8ae);margin:0 0 28px}
+
+/* page-specific grids adapt visibly */
+html[data-site-template="studio"] body :is(.bp-grid,.innovation-grid,.media-grid,.reward-grid,.course-grid,.report-grid,.fb-grid,.team-grid){gap:26px!important}
+html[data-site-template="creative"] body :is(.bp-grid,.innovation-grid,.media-grid,.reward-grid,.course-grid,.report-grid,.fb-grid,.team-grid){gap:30px!important}
+html[data-site-template="campaign"] body :is(.bp-grid,.innovation-grid,.media-grid,.reward-grid,.course-grid,.report-grid,.fb-grid,.team-grid){gap:18px!important}
+
+/* Template picker */
+.lp360-template-intro{font-size:13px;color:#667085;line-height:1.55;margin:-4px 0 16px}
+.lp360-template-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;text-align:left}
+.lp360-template-choice{display:block;border:2px solid #e5e7eb;border-radius:14px;padding:10px;background:#fff;cursor:pointer;transition:.18s ease;min-width:0}
+.lp360-template-choice:hover{transform:translateY(-2px);border-color:#93c5fd;box-shadow:0 10px 24px rgba(15,23,42,.09)}
+.lp360-template-choice.is-selected{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.lp360-template-choice>input{position:absolute;opacity:0;pointer-events:none}
+.lp360-template-preview{height:126px;border-radius:9px;position:relative;overflow:hidden;margin-bottom:9px;background:#eee}
+.lp360-template-preview span{position:absolute;display:block;border-radius:4px}
+.lp360-template-preview .pv-nav{left:6%;top:7%;width:88%;height:10%;background:rgba(255,255,255,.94)}
+.lp360-template-preview .pv-hero{left:6%;top:21%;width:88%;height:42%;background:#aaa}
+.lp360-template-preview .pv-title{left:11%;top:31%;width:38%;height:8%;background:#fff}
+.lp360-template-preview .pv-card{bottom:9%;width:25%;height:20%;background:#fff}
+.lp360-template-preview .pv-card-a{left:8%}.lp360-template-preview .pv-card-b{left:38%}.lp360-template-preview .pv-card-c{right:8%}
+.lp360-preview-adventure{background:#f7f7f2}.lp360-preview-adventure .pv-hero{left:0;top:0;width:100%;height:67%;border-radius:0;background:linear-gradient(120deg,#214733,#719478)}.lp360-preview-adventure .pv-nav{z-index:2;background:rgba(255,255,255,.20)}
+.lp360-preview-studio{background:#10131b}.lp360-preview-studio .pv-nav{background:#171b24}.lp360-preview-studio .pv-hero{background:linear-gradient(135deg,#222839,#0b0d12);border:2px solid #383f51}.lp360-preview-studio .pv-card{background:#1d2330}.lp360-preview-studio .pv-title{background:#c8ff2f}
+.lp360-preview-creative{background:#242424}.lp360-preview-creative .pv-nav{background:#fff}.lp360-preview-creative .pv-hero{background:linear-gradient(120deg,#7c3aed,#d946ef,#f97316);border-radius:12px}.lp360-preview-creative .pv-card{background:#fff;border-radius:8px}.lp360-preview-creative .pv-title{background:#facc15}
+.lp360-preview-campaign{background:#fff8ed}.lp360-preview-campaign .pv-nav{background:#fff}.lp360-preview-campaign .pv-hero{left:0;width:100%;background:linear-gradient(120deg,#384a25,#ef4b23);border-radius:0}.lp360-preview-campaign .pv-card{border-top:4px solid #ef4b23;background:#fff}.lp360-preview-campaign .pv-title{background:#fff}
+.lp360-preview-education{background:#eef8fb}.lp360-preview-education .pv-nav{background:#fff}.lp360-preview-education .pv-hero{background:linear-gradient(90deg,#eefaff 0 48%,#63b7d6 48%);border-radius:8px}.lp360-preview-education .pv-card{background:#fff;border-radius:50%}.lp360-preview-education .pv-title{background:#1889b9}
+.lp360-template-name{font-size:13px;font-weight:800;color:#111827}.lp360-template-desc{font-size:10.5px;color:#6b7280;line-height:1.35;margin-top:3px}
+
+@media(max-width:900px){
+  .lp360-template-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  html[data-site-template="creative"] body,html[data-site-template="creative"][data-template-page]:not([data-template-page="home"]) body{padding:18px 2%}
+  html[data-site-template="education"][data-template-page="home"] #home .hero-overlay{width:100%;clip-path:none;opacity:.38!important}
+  html[data-site-template="education"][data-template-page="home"] #home .hero-content{padding:58px 24px!important}
+  html[data-site-template="education"][data-template-page="home"] #home::after{background:linear-gradient(90deg,rgba(239,251,254,.96),rgba(239,251,254,.68))}
+  html[data-site-template][data-template-page]:not([data-template-page="home"]) body>main{margin:18px 12px;padding:28px 18px}
+}
+@media(max-width:620px){
+  .lp360-template-grid{grid-template-columns:1fr}
+  .lp360-template-preview{height:150px}
+  html[data-site-template="adventure"] body .site-header{top:0;position:relative;background:#304c39!important}
+  html[data-site-template="creative"] body{padding:0!important}
+  html[data-site-template="creative"] body>.announcement,html[data-site-template="creative"] body>main{border-radius:0}
+  html[data-template-page="home"] #home{min-height:520px!important}
+  html[data-template-page="home"] #home h1{font-size:clamp(36px,11vw,54px)!important}
+}

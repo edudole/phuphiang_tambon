@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="course.css?v=20260820-1">
+  <link rel="stylesheet" href="course.css?v=20260915-options-1">
   <link rel="stylesheet" href="admin-subpage.css?v=20260826-1">
-  <link rel="stylesheet" href="course-manager.css?v=20260826-1">
+  <link rel="stylesheet" href="course-manager.css?v=20260915-options-1">
   <link rel="stylesheet" href="theme-modern.css?v=20260902-1">
 </head>
 <body class="theme-v2">
@@ -33,9 +33,13 @@
 
       <section class="course-panel">
         <div class="course-toolbar">
+          <label for="courseTypeFilter">หลักสูตร</label>
+          <select id="courseTypeFilter">
+            <option value="">ทั้งหมด</option>
+          </select>
           <label for="courseSearch">ค้นหา</label>
           <input id="courseSearch" type="search"
-                 placeholder="ค้นหาหลักสูตร ผู้เสนอ หรือวันที่..."
+                 placeholder="ค้นหาชื่อหลักสูตร ผู้โพสต์ หรือวันที่..."
                  autocomplete="off">
           <strong id="courseCount">กำลังโหลด...</strong>
         </div>
@@ -51,7 +55,8 @@
               <tr>
                 <th class="course-number-column">ลำดับ</th>
                 <th>หลักสูตร</th>
-                <th>ผู้เสนอหลักสูตร</th>
+                <th>ชื่อหลักสูตร</th>
+                <th>ผู้โพสต์</th>
                 <th>วันที่อัพโหลดไฟล์</th>
                 <th class="course-download-column">ดาวน์โหลดไฟล์</th>
               </tr>
@@ -64,9 +69,9 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="course.js?v=20260826-1"></script>
+  <script src="course.js?v=20260915-options-1"></script>
   <script src="admin-subpage.js?v=20260826-1"></script>
-  <script src="course-manager.js?v=20260915-content-key-1"></script>
+  <script src="course-manager.js?v=20260915-options-1"></script>
   <script>
   function backToHome(event) {
     if (event) event.preventDefault();

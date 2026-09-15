@@ -266,7 +266,7 @@
     try {
       await prepareStudentResultFrame(rollno);
       if (window.Swal) Swal.close();
-      try { sessionStorage.setItem('SSS_PROFILE_ROLLNO', rollno); } catch (_) {}
+      try { sessionStorage.setItem('LP360:TAMBOL:SSS_PROFILE_ROLLNO', rollno); } catch (_) {}
     } catch (error) {
       console.error('student result frame error:', error);
       removeStudentResultFrame();

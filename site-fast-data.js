@@ -22,14 +22,14 @@
   let homeFastPromise = null;
 
   function isAdminMode() {
-    try { return Boolean(sessionStorage.getItem('mysiteAdminToken')); }
+    try { return Boolean(sessionStorage.getItem('LP360:TAMBOL:mysiteAdminToken')); }
     catch (_) { return false; }
   }
 
   function storageRead(storage, key, maxAgeMs) {
     if (!storage || !key || !maxAgeMs || isAdminMode()) return null;
     try {
-      const saved = JSON.parse(storage.getItem('SITE_FAST:' + key) || 'null');
+      const saved = JSON.parse(storage.getItem('LP360:TAMBOL:SITE_FAST:' + key) || 'null');
       if (!saved || !saved.savedAt || Date.now() - saved.savedAt > maxAgeMs) return null;
       return saved;
     } catch (_) { return null; }
@@ -43,8 +43,8 @@
   function writeCache(key, data) {
     if (!key || isAdminMode()) return;
     const payload = JSON.stringify({ savedAt: Date.now(), data });
-    try { sessionStorage.setItem('SITE_FAST:' + key, payload); } catch (_) {}
-    try { localStorage.setItem('SITE_FAST:' + key, payload); } catch (_) {}
+    try { sessionStorage.setItem('LP360:TAMBOL:SITE_FAST:' + key, payload); } catch (_) {}
+    try { localStorage.setItem('LP360:TAMBOL:SITE_FAST:' + key, payload); } catch (_) {}
   }
 
   function sleep(ms) {
@@ -334,7 +334,7 @@
     [window.sessionStorage, window.localStorage].forEach(storage => {
       try {
         Object.keys(storage).forEach(key => {
-          if (!key.startsWith('SITE_FAST:')) return;
+          if (!key.startsWith('LP360:TAMBOL:SITE_FAST:')) return;
           if (!prefix || key.includes(prefix)) storage.removeItem(key);
         });
       } catch (_) {}

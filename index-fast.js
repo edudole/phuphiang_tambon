@@ -25,14 +25,14 @@
   let homeFastPromise = null;
 
   function isAdminMode() {
-    try { return Boolean(sessionStorage.getItem('mysiteAdminToken')); }
+    try { return Boolean(sessionStorage.getItem('LP360:TAMBOL:mysiteAdminToken')); }
     catch (_) { return false; }
   }
 
   function storageRead(storage, key, maxAgeMs) {
     if (!storage || !key || !maxAgeMs || isAdminMode()) return null;
     try {
-      const saved = JSON.parse(storage.getItem('SITE_FAST:' + key) || 'null');
+      const saved = JSON.parse(storage.getItem('LP360:TAMBOL:SITE_FAST:' + key) || 'null');
       if (!saved || !saved.savedAt || Date.now() - saved.savedAt > maxAgeMs) return null;
       return saved;
     } catch (_) { return null; }
@@ -46,8 +46,8 @@
   function writeCache(key, data) {
     if (!key || isAdminMode()) return;
     const payload = JSON.stringify({ savedAt: Date.now(), data });
-    try { sessionStorage.setItem('SITE_FAST:' + key, payload); } catch (_) {}
-    try { localStorage.setItem('SITE_FAST:' + key, payload); } catch (_) {}
+    try { sessionStorage.setItem('LP360:TAMBOL:SITE_FAST:' + key, payload); } catch (_) {}
+    try { localStorage.setItem('LP360:TAMBOL:SITE_FAST:' + key, payload); } catch (_) {}
   }
 
   function sleep(ms) {
@@ -337,7 +337,7 @@
     [window.sessionStorage, window.localStorage].forEach(storage => {
       try {
         Object.keys(storage).forEach(key => {
-          if (!key.startsWith('SITE_FAST:')) return;
+          if (!key.startsWith('LP360:TAMBOL:SITE_FAST:')) return;
           if (!prefix || key.includes(prefix)) storage.removeItem(key);
         });
       } catch (_) {}
@@ -1249,7 +1249,7 @@ async function openNewsPopup(item) {
   const JS_FILES=['edit-website.js?v=20260827-2','news-manager.js?v=20260902-newsurl-optional-2','newsletter-manager.js?v=20260826-4','facebook-manager.js?v=20260826-2','team-manager.js?v=20260901-index-team-1'];
   let toolsPromise=null;
   let storagePromise=null;
-  const STORAGE_CACHE_KEY='mysiteAdminStorageV1';
+  const STORAGE_CACHE_KEY='LP360:TAMBOL:mysiteAdminStorageV1';
   const STORAGE_CACHE_MS=5*60*1000;
   const $=id=>document.getElementById(id);
   async function api(payload){const response=await fetch(API_URL,{method:'POST',cache:'no-store',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});if(!response.ok)throw new Error(`HTTP ${response.status}`);const result=await response.json();if(!result.success)throw new Error(result.message||'ดำเนินการไม่สำเร็จ');return result}
@@ -1282,7 +1282,7 @@ async function openNewsPopup(item) {
   }
   function writeStorageCache(data){try{sessionStorage.setItem(STORAGE_CACHE_KEY,JSON.stringify({savedAt:Date.now(),data}))}catch(_){}}
   function loadAdminStorage(force=false){
-    const token=sessionStorage.getItem('mysiteAdminToken');
+    const token=sessionStorage.getItem('LP360:TAMBOL:mysiteAdminToken');
     if(!token)return Promise.resolve();
     const cached=!force&&readStorageCache();
     if(cached)renderAdminStorage(cached,'ready');else renderAdminStorage(null,'loading');
@@ -1301,16 +1301,16 @@ async function openNewsPopup(item) {
   function openLogin(){ $('adminLoginStatus').textContent='';$('adminLoginModal').hidden=false;setTimeout(()=>$('adminUsername').focus(),30) }
   function closeLogin(){ $('adminLoginModal').hidden=true }
   $('adminLoginButton').addEventListener('click',openLogin);$('adminLoginClose').addEventListener('click',closeLogin);$('adminLoginModal').addEventListener('click',e=>{if(e.target===$('adminLoginModal'))closeLogin()});
-  $('adminLoginForm').addEventListener('submit',async event=>{event.preventDefault();const status=$('adminLoginStatus'),submit=$('adminLoginSubmit');status.textContent='';submit.disabled=true;submit.textContent='กำลังตรวจสอบ...';try{const result=await api({mode:'adminlogin',username:$('adminUsername').value.trim(),password:$('adminPassword').value});sessionStorage.setItem('mysiteAdminToken',result.token);sessionStorage.setItem('mysiteAdminName',result.username||'Admin');submit.textContent='กำลังโหลดเครื่องมือ...';await activateAdmin()}catch(error){sessionStorage.removeItem('mysiteAdminToken');status.textContent=error.message}finally{submit.disabled=false;submit.textContent='เข้าสู่ระบบ'}});
+  $('adminLoginForm').addEventListener('submit',async event=>{event.preventDefault();const status=$('adminLoginStatus'),submit=$('adminLoginSubmit');status.textContent='';submit.disabled=true;submit.textContent='กำลังตรวจสอบ...';try{const result=await api({mode:'adminlogin',username:$('adminUsername').value.trim(),password:$('adminPassword').value});sessionStorage.setItem('LP360:TAMBOL:mysiteAdminToken',result.token);sessionStorage.setItem('LP360:TAMBOL:mysiteAdminName',result.username||'Admin');submit.textContent='กำลังโหลดเครื่องมือ...';await activateAdmin()}catch(error){sessionStorage.removeItem('LP360:TAMBOL:mysiteAdminToken');status.textContent=error.message}finally{submit.disabled=false;submit.textContent='เข้าสู่ระบบ'}});
   $('adminForgotButton').addEventListener('click',async()=>{const modal=await Swal.fire({title:'ลืมรหัสผ่าน',input:'email',inputLabel:'กรอก Email ที่ลงทะเบียนไว้',showCancelButton:true,confirmButtonText:'ส่งข้อมูลเข้าสู่ Email',cancelButtonText:'ยกเลิก',confirmButtonColor:'#dc2626',inputValidator:value=>!value?'กรุณากรอก Email':undefined});if(!modal.isConfirmed)return;Swal.fire({title:'กำลังส่ง Email...',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});try{await api({mode:'adminforgot',email:modal.value.trim()});Swal.fire({icon:'success',title:'ส่ง Email แล้ว',text:'กรุณาตรวจสอบกล่องจดหมายและจดหมายขยะ'})}catch(error){Swal.fire({icon:'error',title:'ส่งไม่สำเร็จ',text:error.message})}});
   $('adminTogglePassword').addEventListener('click',event=>{const input=$('adminPassword');input.type=input.type==='password'?'text':'password';event.currentTarget.querySelector('i').className=input.type==='password'?'fa-solid fa-eye':'fa-solid fa-eye-slash'});
-  $('adminLogoutButton').addEventListener('click',()=>{sessionStorage.removeItem('mysiteAdminToken');sessionStorage.removeItem('mysiteAdminName');setAdminUi(false);if(window.Swal)Swal.close()});
-  const existingToken=sessionStorage.getItem('mysiteAdminToken');
+  $('adminLogoutButton').addEventListener('click',()=>{sessionStorage.removeItem('LP360:TAMBOL:mysiteAdminToken');sessionStorage.removeItem('LP360:TAMBOL:mysiteAdminName');setAdminUi(false);if(window.Swal)Swal.close()});
+  const existingToken=sessionStorage.getItem('LP360:TAMBOL:mysiteAdminToken');
   if(existingToken){
     api({mode:'editwebsite',editor:'text',token:existingToken})
       .then(()=>loadAdminTools())
       .then(()=>{setAdminUi(true);loadAdminStorage(false)})
-      .catch(()=>{sessionStorage.removeItem('mysiteAdminToken');sessionStorage.removeItem('mysiteAdminName');setAdminUi(false)});
+      .catch(()=>{sessionStorage.removeItem('LP360:TAMBOL:mysiteAdminToken');sessionStorage.removeItem('LP360:TAMBOL:mysiteAdminName');setAdminUi(false)});
   }else setAdminUi(false);
 })();
 
@@ -1375,7 +1375,7 @@ async function getLayout(){
   return normalize(j.items);
 }
 async function apiAdmin(action,data){
-  const token=sessionStorage.getItem('mysiteAdminToken')||'';
+  const token=sessionStorage.getItem('LP360:TAMBOL:mysiteAdminToken')||'';
   const r=await fetch(API,{method:'POST',cache:'no-store',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({mode:'sectionlayoutadmin',action,token,data:data||{}})}),j=await r.json();
   if(!r.ok||!j.success)throw new Error(j.message||'ดำเนินการไม่สำเร็จ');
   return j.data||{};
@@ -1906,7 +1906,7 @@ window.STUDENT_PROFILE_WEB_APP_URL =
     try {
       await prepareStudentResultFrame(rollno);
       if (window.Swal) Swal.close();
-      try { sessionStorage.setItem('SSS_PROFILE_ROLLNO', rollno); } catch (_) {}
+      try { sessionStorage.setItem('LP360:TAMBOL:SSS_PROFILE_ROLLNO', rollno); } catch (_) {}
     } catch (error) {
       console.error('student result frame error:', error);
       removeStudentResultFrame();
@@ -2007,7 +2007,7 @@ window.STUDENT_PROFILE_WEB_APP_URL =
 
   const LEVELS = ['ประถม', 'ม.ต้น', 'ม.ปลาย'];
   const MEDALS = ['🥇1', '🥈2', '🥉3'];
-  const CACHE_KEY = 'studentServiceTop3:v1';
+  const CACHE_KEY = 'LP360:TAMBOL:studentServiceTop3:v1';
   const CACHE_AGE = 5 * 60 * 1000;
   const AUTO_ROTATE_DELAY = 4000;
   let rankingData = null;
@@ -3196,9 +3196,9 @@ window.STUDENT_PROFILE_WEB_APP_URL =
   'use strict';
 
   const MAIN_API_URL = (window.SiteFast && window.SiteFast.API_URL) || (window.APP_CONFIG && window.APP_CONFIG.API_URL) || '';
-  const EXEC_CACHE_KEY = 'SITE_FAST:cliproom-exec-v3';
+  const EXEC_CACHE_KEY = 'LP360:TAMBOL:SITE_FAST:cliproom-exec-v3';
   const EXEC_CACHE_AGE = 10 * 60 * 1000;
-  const CATALOG_CACHE_KEY = 'SITE_FAST:cliproom-catalog-v3-dynamic-exec';
+  const CATALOG_CACHE_KEY = 'LP360:TAMBOL:SITE_FAST:cliproom-catalog-v3-dynamic-exec';
   const CATALOG_STALE_AGE = 24 * 60 * 60 * 1000;
   const JSONP_TIMEOUT = 45 * 1000;
   const RETRY_DELAYS = [1000, 1800, 3200, 6000, 10000, 16000, 30000];
@@ -3520,7 +3520,7 @@ window.STUDENT_PROFILE_WEB_APP_URL =
 
   const API_URL = window.APP_CONFIG.API_URL;
   const TEACHER_URL = API_URL + '?page=teacher';
-  let student = JSON.parse(localStorage.getItem('LEARN_STUDENT') || 'null');
+  let student = JSON.parse(localStorage.getItem('LP360:TAMBOL:LEARN_STUDENT') || 'null');
   let editProfileRemovePhoto = false;
   let activities = [];
   let currentActivityTarget = 'all';
@@ -3829,7 +3829,7 @@ if (!fullname || !phone) {
     student = res.student;
 
     localStorage.setItem(
-      'LEARN_STUDENT',
+      'LP360:TAMBOL:LEARN_STUDENT',
       JSON.stringify(student)
     );
 
@@ -3933,7 +3933,7 @@ if (!fullname || !phone) {
 
       // ถือว่าลงทะเบียนสำเร็จ = เข้าสู่ระบบทันที
       student = res.student;
-      localStorage.setItem('LEARN_STUDENT', JSON.stringify(student));
+      localStorage.setItem('LP360:TAMBOL:LEARN_STUDENT', JSON.stringify(student));
       closeModal('studentModal');
       clearStudentPhoto();
       updateTop();
@@ -3960,7 +3960,7 @@ if (!fullname || !phone) {
       Swal.close();
       if (!res.ok) return Swal.fire('แจ้งเตือน',res.message,'warning');
       student = res.student;
-      localStorage.setItem('LEARN_STUDENT',JSON.stringify(student));
+      localStorage.setItem('LP360:TAMBOL:LEARN_STUDENT',JSON.stringify(student));
       closeModal('studentModal'); updateTop();
       Swal.fire('สำเร็จ',res.message,'success');
     } catch(err) { Swal.close(); Swal.fire('ผิดพลาด',err.message,'error'); }
@@ -4359,7 +4359,7 @@ async function loadMyTotalHours() {
     }).then(r=>{
       if(!r.isConfirmed)return;
       student=null;
-      localStorage.removeItem('LEARN_STUDENT');
+      localStorage.removeItem('LP360:TAMBOL:LEARN_STUDENT');
       closeEditProfile();
       closeModal('studentModal');
       updateTop();
@@ -4369,7 +4369,7 @@ async function loadMyTotalHours() {
   }
 
   function closeStudentModal() {
-    Swal.fire({title:'ออกจากระบบ?',icon:'warning',showCancelButton:true,confirmButtonText:'ออกจากระบบ',cancelButtonText:'ยกเลิก'}).then(r=>{if(!r.isConfirmed)return;student=null;localStorage.removeItem('LEARN_STUDENT');closeModal('studentModal');updateTop();showPage('activitiesPage',$('learningBaseModule').querySelector('.learning-tabs button'));});
+    Swal.fire({title:'ออกจากระบบ?',icon:'warning',showCancelButton:true,confirmButtonText:'ออกจากระบบ',cancelButtonText:'ยกเลิก'}).then(r=>{if(!r.isConfirmed)return;student=null;localStorage.removeItem('LP360:TAMBOL:LEARN_STUDENT');closeModal('studentModal');updateTop();showPage('activitiesPage',$('learningBaseModule').querySelector('.learning-tabs button'));});
   }
 
 
@@ -4512,7 +4512,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   function getStudent() {
     try {
       return JSON.parse(
-        localStorage.getItem('LEARN_STUDENT') || 'null'
+        localStorage.getItem('LP360:TAMBOL:LEARN_STUDENT') || 'null'
       );
     } catch (_) {
       return null;
@@ -4672,7 +4672,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   window.addEventListener('storage', event => {
-    if (event.key === 'LEARN_STUDENT') {
+    if (event.key === 'LP360:TAMBOL:LEARN_STUDENT') {
       renderProfile();
     }
   });

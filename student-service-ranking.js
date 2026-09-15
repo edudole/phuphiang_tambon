@@ -7,7 +7,7 @@
 
   const LEVELS = ['ประถม', 'ม.ต้น', 'ม.ปลาย'];
   const MEDALS = ['🥇1', '🥈2', '🥉3'];
-  const CACHE_KEY = 'studentServiceTop3:v1';
+  const CACHE_KEY = 'LP360:TAMBOL:studentServiceTop3:v1';
   const CACHE_AGE = 5 * 60 * 1000;
   const AUTO_ROTATE_DELAY = 4000;
   let rankingData = null;

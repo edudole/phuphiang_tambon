@@ -57,7 +57,7 @@
   })[char]);
 
   async function request(params) {
-    const token = sessionStorage.getItem('mysiteAdminToken') || '';
+    const token = sessionStorage.getItem('LP360:TAMBOL:mysiteAdminToken') || '';
     const response = await fetch(API_URL, {
       method: 'POST', cache: 'no-store',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },

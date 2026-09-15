@@ -68,7 +68,7 @@
 (() => {
   'use strict';
   const params = new URLSearchParams(location.search);
-  const rollno = String(params.get('rollno') || sessionStorage.getItem('SSS_PROFILE_ROLLNO') || '').replace(/\D/g,'').slice(0,10);
+  const rollno = String(params.get('rollno') || sessionStorage.getItem('LP360:TAMBOL:SSS_PROFILE_ROLLNO') || '').replace(/\D/g,'').slice(0,10);
   const webAppUrl = String(window.STUDENT_PROFILE_WEB_APP_URL || '').trim();
   const $ = id => document.getElementById(id);
   $('loadingId').textContent = rollno ? `รหัสนักศึกษา ${rollno}` : '';
@@ -101,7 +101,7 @@
     setBar('meetBar',meet); setBar('classroomBar',classroom); setBar('activityBar',activityPct); setBar('scoreBar',score);
     const msgs=[r.Mess1,r.Mess2,r.Mess3].map(x=>String(x||'').trim()).filter(Boolean); const box=$('messages'); box.innerHTML='';
     if(msgs.length){ msgs.forEach(m=>{const d=document.createElement('div');d.className='message';d.textContent=m;box.appendChild(d);}); } else { const d=document.createElement('div');d.className='empty';d.textContent='ไม่มีข้อความใหม่';box.appendChild(d); }
-    try{sessionStorage.setItem('SSS_PROFILE_ROLLNO',String(r.rollno||rollno));}catch(_){ }
+    try{sessionStorage.setItem('LP360:TAMBOL:SSS_PROFILE_ROLLNO',String(r.rollno||rollno));}catch(_){ }
     const term=new URL(webAppUrl); term.searchParams.set('page','Term1'); term.searchParams.set('rollno',String(r.rollno||rollno)); term.searchParams.set('imguser',String(r.imguser||'')); $('termLink').href=term.toString();
     $('loadingBox').hidden=true; $('errorBox').hidden=true; $('profileBox').style.display='block';
   }

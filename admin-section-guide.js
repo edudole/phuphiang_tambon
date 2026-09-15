@@ -56,7 +56,7 @@ async function getLayout(){
   return normalize(j.items);
 }
 async function apiAdmin(action,data){
-  const token=sessionStorage.getItem('mysiteAdminToken')||'';
+  const token=sessionStorage.getItem('LP360:TAMBOL:mysiteAdminToken')||'';
   const r=await fetch(API,{method:'POST',cache:'no-store',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({mode:'sectionlayoutadmin',action,token,data:data||{}})}),j=await r.json();
   if(!r.ok||!j.success)throw new Error(j.message||'ดำเนินการไม่สำเร็จ');
   return j.data||{};

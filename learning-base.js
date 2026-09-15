@@ -4,7 +4,7 @@
 
   const API_URL = window.APP_CONFIG.API_URL;
   const TEACHER_URL = API_URL + '?page=teacher';
-  let student = JSON.parse(localStorage.getItem('LEARN_STUDENT') || 'null');
+  let student = JSON.parse(localStorage.getItem('LP360:TAMBOL:LEARN_STUDENT') || 'null');
   let editProfileRemovePhoto = false;
   let activities = [];
   let currentActivityTarget = 'all';
@@ -313,7 +313,7 @@ if (!fullname || !phone) {
     student = res.student;
 
     localStorage.setItem(
-      'LEARN_STUDENT',
+      'LP360:TAMBOL:LEARN_STUDENT',
       JSON.stringify(student)
     );
 
@@ -417,7 +417,7 @@ if (!fullname || !phone) {
 
       // ถือว่าลงทะเบียนสำเร็จ = เข้าสู่ระบบทันที
       student = res.student;
-      localStorage.setItem('LEARN_STUDENT', JSON.stringify(student));
+      localStorage.setItem('LP360:TAMBOL:LEARN_STUDENT', JSON.stringify(student));
       closeModal('studentModal');
       clearStudentPhoto();
       updateTop();
@@ -444,7 +444,7 @@ if (!fullname || !phone) {
       Swal.close();
       if (!res.ok) return Swal.fire('แจ้งเตือน',res.message,'warning');
       student = res.student;
-      localStorage.setItem('LEARN_STUDENT',JSON.stringify(student));
+      localStorage.setItem('LP360:TAMBOL:LEARN_STUDENT',JSON.stringify(student));
       closeModal('studentModal'); updateTop();
       Swal.fire('สำเร็จ',res.message,'success');
     } catch(err) { Swal.close(); Swal.fire('ผิดพลาด',err.message,'error'); }
@@ -843,7 +843,7 @@ async function loadMyTotalHours() {
     }).then(r=>{
       if(!r.isConfirmed)return;
       student=null;
-      localStorage.removeItem('LEARN_STUDENT');
+      localStorage.removeItem('LP360:TAMBOL:LEARN_STUDENT');
       closeEditProfile();
       closeModal('studentModal');
       updateTop();
@@ -853,7 +853,7 @@ async function loadMyTotalHours() {
   }
 
   function closeStudentModal() {
-    Swal.fire({title:'ออกจากระบบ?',icon:'warning',showCancelButton:true,confirmButtonText:'ออกจากระบบ',cancelButtonText:'ยกเลิก'}).then(r=>{if(!r.isConfirmed)return;student=null;localStorage.removeItem('LEARN_STUDENT');closeModal('studentModal');updateTop();showPage('activitiesPage',$('learningBaseModule').querySelector('.learning-tabs button'));});
+    Swal.fire({title:'ออกจากระบบ?',icon:'warning',showCancelButton:true,confirmButtonText:'ออกจากระบบ',cancelButtonText:'ยกเลิก'}).then(r=>{if(!r.isConfirmed)return;student=null;localStorage.removeItem('LP360:TAMBOL:LEARN_STUDENT');closeModal('studentModal');updateTop();showPage('activitiesPage',$('learningBaseModule').querySelector('.learning-tabs button'));});
   }
 
 

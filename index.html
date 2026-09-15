@@ -17,10 +17,10 @@
     // Cold load: เริ่ม homefast เร็วตั้งแต่ <head>.
     // Repeat load: ใช้ cache เดิมแสดงผลก่อน แล้วรีเฟรชข้อมูลเบื้องหลัง เพื่อลดการยิง Apps Script ซ้ำ.
     (function () {
-      var cacheKey = 'SITE_FAST:homefast-v10-resilient-20260912';
+      var cacheKey = 'LP360:TAMBOL:SITE_FAST:homefast-v10-resilient-20260912';
       var maxAge = 24 * 60 * 60 * 1000;
       var admin = false;
-      try { admin = Boolean(sessionStorage.getItem('mysiteAdminToken')); } catch (_) {}
+      try { admin = Boolean(sessionStorage.getItem('LP360:TAMBOL:mysiteAdminToken')); } catch (_) {}
       function hasUsable(storage) {
         if (!storage) return false;
         try {

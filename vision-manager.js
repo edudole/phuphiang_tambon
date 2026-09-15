@@ -9,7 +9,7 @@
   }[char]));
 
   function adminToken() {
-    return sessionStorage.getItem('mysiteAdminToken') || '';
+    return sessionStorage.getItem('LP360:TAMBOL:mysiteAdminToken') || '';
   }
 
   async function api(mode, extra = {}) {

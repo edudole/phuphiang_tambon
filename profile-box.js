@@ -12,7 +12,7 @@
   function getStudent() {
     try {
       return JSON.parse(
-        localStorage.getItem('LEARN_STUDENT') || 'null'
+        localStorage.getItem('LP360:TAMBOL:LEARN_STUDENT') || 'null'
       );
     } catch (_) {
       return null;
@@ -172,7 +172,7 @@
   });
 
   window.addEventListener('storage', event => {
-    if (event.key === 'LEARN_STUDENT') {
+    if (event.key === 'LP360:TAMBOL:LEARN_STUDENT') {
       renderProfile();
     }
   });

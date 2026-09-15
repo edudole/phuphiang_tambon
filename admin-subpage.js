@@ -2,7 +2,7 @@
   'use strict';
 
   const API_URL = window.APP_CONFIG.API_URL;
-  const token = sessionStorage.getItem('mysiteAdminToken');
+  const token = sessionStorage.getItem('LP360:TAMBOL:mysiteAdminToken');
   const buttons = Array.from(document.querySelectorAll('.admin-manage-data-button'));
 
   function setAdminMode(enabled) {
@@ -29,8 +29,8 @@
       if (!response.ok || !result.success) throw new Error('Invalid admin session');
       setAdminMode(true);
     } catch (error) {
-      sessionStorage.removeItem('mysiteAdminToken');
-      sessionStorage.removeItem('mysiteAdminName');
+      sessionStorage.removeItem('LP360:TAMBOL:mysiteAdminToken');
+      sessionStorage.removeItem('LP360:TAMBOL:mysiteAdminName');
       setAdminMode(false);
     }
   }

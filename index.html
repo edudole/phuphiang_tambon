@@ -17,7 +17,7 @@
     // Cold load: เริ่ม homefast เร็วตั้งแต่ <head>.
     // Repeat load: ใช้ cache เดิมแสดงผลก่อน แล้วรีเฟรชข้อมูลเบื้องหลัง เพื่อลดการยิง Apps Script ซ้ำ.
     (function () {
-      var cacheKey = 'LP360:TAMBOL:SITE_FAST:homefast-v10-resilient-20260912';
+      var cacheKey = 'LP360:TAMBOL:SITE_FAST:homefast-v12-announcement-central-b24-d24-20260915';
       var maxAge = 24 * 60 * 60 * 1000;
       var admin = false;
       try { admin = Boolean(sessionStorage.getItem('LP360:TAMBOL:mysiteAdminToken')); } catch (_) {}
@@ -58,7 +58,7 @@
       contain-intrinsic-size: 1px 620px;
     }
 </style>
-  <link rel="stylesheet" href="index-fast-core.css?v=20260904-announcement-click-1">
+  <link rel="stylesheet" href="index-fast-core.css?v=20260915-announcement-click-visible-2">
   <style>
     #learningBaseModule.shopactivity-preview{padding:52px 0;background:linear-gradient(145deg,#f4f7fb,#fff 55%,#eff5ff)}
     #learningBaseModule .shopactivity-arrow{width:40px;height:40px;padding:0;border-radius:50%;background:#fff;color:#2563eb;font-size:28px}
@@ -101,7 +101,7 @@
     <div class="admin-storage-meter" id="adminStorageMeter" aria-label="พื้นที่จัดเก็บไฟล์ของผู้ดูแล">
       <div class="admin-storage-labels">
         <span id="adminStorageUsed">กำลังตรวจสอบพื้นที่...</span>
-        <span id="adminStorageLimit">100 GB</span>
+        <span id="adminStorageLimit">กำลังโหลด...</span>
       </div>
       <div
         class="admin-storage-track"
@@ -1008,6 +1008,6 @@
     </div>
   </div>
 
-  <script defer src="index-fast.js?v=20260915-announcement-b24-1"></script>
+  <script defer src="index-fast.js?v=20260915-storage-limit-d15-1"></script>
 </body>
 </html>

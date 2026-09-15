@@ -11,7 +11,7 @@
   // - deduplicate requests
   // - limit parallel Apps Script reads to avoid cold-start congestion
   // - retry transient read failures until the connection succeeds
-  const HOMEFAST_CACHE_KEY = 'homefast-v11-announcement-b24-20260915';
+  const HOMEFAST_CACHE_KEY = 'homefast-v12-announcement-central-b24-d24-20260915';
   const HOMEFAST_TTL = 5 * 60 * 1000;
   const HOMEFAST_STALE_TTL = 24 * 60 * 60 * 1000;
   const NETWORK_TIMEOUT = 45 * 1000;
@@ -1059,6 +1059,24 @@ async function openNewsPopup(item) {
   }
 
 
+
+  async function fetchCentralAnnouncement() {
+    const url = new URL(API_URL);
+    url.searchParams.set('mode', 'announcement');
+    url.searchParams.set('_ts', String(Date.now()));
+    const response = await fetch(url.toString(), { cache: 'no-store' });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const result = await response.json();
+    if (!result || result.success === false) {
+      throw new Error(result?.message || 'โหลด announcement กลางไม่สำเร็จ');
+    }
+    const data = result.data || result;
+    return {
+      text: String(data.text || data.announcementText || '').trim(),
+      url: String(data.url || data.announcementUrl || '').trim()
+    };
+  }
+
   async function loadAnnouncement() {
     const announcement = document.getElementById('announcementText');
     const socials = document.getElementById('announcementSocials');
@@ -1080,14 +1098,26 @@ async function openNewsPopup(item) {
       }
 
       const contact = result.contact || {};
-      const announcementMessage = String(contact.announcementText || '').trim();
+      let announcementMessage = String(contact.announcementText || '').trim();
+      let announcementUrl = String(contact.announcementUrl || '').trim();
+
+      // ถ้า homefast/about cache เป็นข้อมูลรุ่นเก่า ให้ fallback ไปอ่าน B24/D24 สดจากฐานกลาง
+      if (!announcementMessage || !announcementUrl) {
+        try {
+          const central = await fetchCentralAnnouncement();
+          if (!announcementMessage) announcementMessage = central.text;
+          if (!announcementUrl) announcementUrl = central.url;
+        } catch (fallbackError) {
+          console.warn('announcement central fallback:', fallbackError);
+        }
+      }
 
       if (announcement) {
         announcement.textContent = announcementMessage;
         announcement.hidden = !announcementMessage;
       }
 
-      enableAnnouncementLink(announcement, contact.announcementUrl);
+      enableAnnouncementLink(announcement, announcementUrl);
 
       const hasLine = setSocial('announcementLine', contact.line);
       const hasFacebook = setSocial('announcementFacebook', contact.facebook);
@@ -1272,7 +1302,7 @@ async function openNewsPopup(item) {
   const JS_FILES=['edit-website.js?v=20260827-2','news-manager.js?v=20260902-newsurl-optional-2','newsletter-manager.js?v=20260826-4','facebook-manager.js?v=20260826-2','team-manager.js?v=20260901-index-team-1'];
   let toolsPromise=null;
   let storagePromise=null;
-  const STORAGE_CACHE_KEY='LP360:TAMBOL:mysiteAdminStorageV1';
+  const STORAGE_CACHE_KEY='LP360:TAMBOL:mysiteAdminStorageV2D15';
   const STORAGE_CACHE_MS=5*60*1000;
   const $=id=>document.getElementById(id);
   async function api(payload){const response=await fetch(API_URL,{method:'POST',cache:'no-store',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});if(!response.ok)throw new Error(`HTTP ${response.status}`);const result=await response.json();if(!result.success)throw new Error(result.message||'ดำเนินการไม่สำเร็จ');return result}
@@ -1294,7 +1324,7 @@ async function openNewsPopup(item) {
     const maxBytes=Math.max(1,Number(data&&data.limitBytes)||100*1024*1024*1024);
     const percent=Math.min(100,Math.max(0,(bytes/maxBytes)*100));
     used.textContent='ใช้พื้นที่แล้ว '+formatStorageGb(bytes);
-    limit.textContent=(data&&data.limitLabel)||'100 GB';
+    limit.textContent=(data&&data.limitLabel)||'—';
     fill.style.width=percent.toFixed(2)+'%';
     track.setAttribute('aria-valuenow',String(Math.round(percent)));
     track.setAttribute('aria-valuetext',used.textContent+' จาก '+limit.textContent);

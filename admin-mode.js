@@ -5,7 +5,7 @@
   const JS_FILES=['edit-website.js?v=20260827-2','news-manager.js?v=20260902-newsurl-optional-2','newsletter-manager.js?v=20260826-4','facebook-manager.js?v=20260826-2','team-manager.js?v=20260901-index-team-1'];
   let toolsPromise=null;
   let storagePromise=null;
-  const STORAGE_CACHE_KEY='LP360:TAMBOL:mysiteAdminStorageV1';
+  const STORAGE_CACHE_KEY='LP360:TAMBOL:mysiteAdminStorageV2D15';
   const STORAGE_CACHE_MS=5*60*1000;
   const $=id=>document.getElementById(id);
   async function api(payload){const response=await fetch(API_URL,{method:'POST',cache:'no-store',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});if(!response.ok)throw new Error(`HTTP ${response.status}`);const result=await response.json();if(!result.success)throw new Error(result.message||'ดำเนินการไม่สำเร็จ');return result}
@@ -27,7 +27,7 @@
     const maxBytes=Math.max(1,Number(data&&data.limitBytes)||100*1024*1024*1024);
     const percent=Math.min(100,Math.max(0,(bytes/maxBytes)*100));
     used.textContent='ใช้พื้นที่แล้ว '+formatStorageGb(bytes);
-    limit.textContent=(data&&data.limitLabel)||'100 GB';
+    limit.textContent=(data&&data.limitLabel)||'—';
     fill.style.width=percent.toFixed(2)+'%';
     track.setAttribute('aria-valuenow',String(Math.round(percent)));
     track.setAttribute('aria-valuetext',used.textContent+' จาก '+limit.textContent);

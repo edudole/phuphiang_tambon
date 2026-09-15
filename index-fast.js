@@ -1022,15 +1022,33 @@ async function openNewsPopup(item) {
     return Boolean(url);
   }
 
-  function enableAnnouncementLink(element) {
-    if (!element || element.dataset.chiangklangLinkReady === '1') return;
-    element.dataset.chiangklangLinkReady = '1';
+  function enableAnnouncementLink(element, value) {
+    if (!element) return;
+
+    const url = safeUrl(value);
+    if (!url) {
+      delete element.dataset.announcementUrl;
+      element.removeAttribute('role');
+      element.removeAttribute('tabindex');
+      element.removeAttribute('aria-label');
+      element.style.cursor = '';
+      return;
+    }
+
+    element.dataset.announcementUrl = url;
     element.setAttribute('role', 'link');
     element.setAttribute('tabindex', '0');
-    element.setAttribute('aria-label', 'เปิดเว็บไซต์ สกร.ระดับอำเภอเชียงกลาง');
+    element.setAttribute('aria-label', 'เปิดเว็บไซต์ที่กำหนด');
+    element.style.cursor = 'pointer';
+
+    if (element.dataset.announcementLinkReady === '1') return;
+    element.dataset.announcementLinkReady = '1';
+
     const openInSameTab = function () {
-      window.location.href = 'https://ed-dole.github.io/maecharim';
+      const target = safeUrl(element.dataset.announcementUrl);
+      if (target) window.location.assign(target);
     };
+
     element.addEventListener('click', openInSameTab);
     element.addEventListener('keydown', function (event) {
       if (event.key === 'Enter' || event.key === ' ') {
@@ -1040,10 +1058,10 @@ async function openNewsPopup(item) {
     });
   }
 
+
   async function loadAnnouncement() {
     const announcement = document.getElementById('announcementText');
     const socials = document.getElementById('announcementSocials');
-    enableAnnouncementLink(announcement);
 
     try {
       let result;
@@ -1069,13 +1087,18 @@ async function openNewsPopup(item) {
         announcement.hidden = !organization;
       }
 
+      enableAnnouncementLink(announcement, contact.announcementUrl);
+
       const hasLine = setSocial('announcementLine', contact.line);
       const hasFacebook = setSocial('announcementFacebook', contact.facebook);
       const hasYoutube = setSocial('announcementYoutube', contact.youtube);
       if (socials) socials.hidden = !(hasLine || hasFacebook || hasYoutube);
     } catch (error) {
       console.error('loadAnnouncement error:', error);
-      if (announcement) announcement.hidden = true;
+      if (announcement) {
+        announcement.hidden = true;
+        enableAnnouncementLink(announcement, '');
+      }
       if (socials) socials.hidden = true;
     }
   }

@@ -8,7 +8,7 @@
   // - deduplicate requests
   // - limit parallel Apps Script reads to avoid cold-start congestion
   // - retry transient read failures until the connection succeeds
-  const HOMEFAST_CACHE_KEY = 'homefast-v10-resilient-20260912';
+  const HOMEFAST_CACHE_KEY = 'homefast-v11-announcement-b24-20260915';
   const HOMEFAST_TTL = 5 * 60 * 1000;
   const HOMEFAST_STALE_TTL = 24 * 60 * 60 * 1000;
   const NETWORK_TIMEOUT = 45 * 1000;
